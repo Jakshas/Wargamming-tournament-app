@@ -1,0 +1,73 @@
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+  events: [Event]
+  eventUserRecords: [EventUserRecord]
+}
+
+type Event {
+  id: ID!
+  name: String!
+  organizer: User
+  participants: [User]
+  maxRounds: Int!
+  round: Int!
+  eventGameRecords: [EventGameRecord]
+  eventUserRecords: [EventUserRecord]
+}
+
+type EventGameRecord {
+  id: ID!
+  event: Event!
+  round: Int!
+  playerOne: User!
+  playerTwo: User
+  playerOnePoints: Int!
+  playerTwoPoints: Int!
+}
+
+type EventUserRecord {
+  id: ID!
+  user: User!
+  event: Event!
+  rounds: Int!
+  points: Int!
+  wins: Int!
+  loses: Int!
+  list: String!
+}
+
+type Query {
+  users: [User]!
+  userByID(id: ID!): User
+  events: [Event]!
+  getEventUserRecordForUser(id: ID): [EventUserRecord]
+  getEventUserRecordForEvent(id: ID): [EventUserRecord]
+  getEventGameRecordForEvent(id: ID): [EventGameRecord]
+}
+
+type Mutation {
+  addUser(name: String!, email: String!, password: String!): String
+  login(email: String, password: String): String
+  changePassword(id: ID!, oldPassword: String!, newPassword: String!): String
+  deleteUser(id: ID!): String
+  addEvent(name: String!, organizer: ID!, maxRounds: Int!): String
+  addParticipant(id: ID!, participant: ID!): String
+  deleteEvent(id: ID!): String
+  nextRound(id: ID!): String
+  addMatch(
+    eventID: ID!
+    round: Int!
+    playerOneID: ID!
+    playerTwoID: ID!
+  ): String
+  setMatchPoints(
+    matchID: ID!
+    playerOnePoints: Int!
+    playerTwoPoints: Int!
+  ): String
+  addUserToEvent(userID: ID!, evenID: ID!): String
+  makeParings(eventID: ID!): String
+}
