@@ -9,12 +9,15 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
+import com.example.backend.data.repositories.QueueEntryRepository;
 import com.example.backend.data.repositories.UserRepository;
 
 @Controller
 public class UserController {
   @Autowired
   private UserRepository userRepository;
+  @Autowired
+  private QueueEntryRepository queueEntryRepository;
 
   @MutationMapping
   public String addUser(@Argument(name = "name") String name, @Argument(name = "email") String email,
@@ -62,6 +65,22 @@ public class UserController {
   @QueryMapping
   public User userByID(@Argument(name = "id") int id) {
     return userRepository.findById(id).get();
+  }
+
+  @QueryMapping
+  public String userInEvent(@Argument(name = "userID") int userID, @Argument(name = "eventID") int eventID) {
+    User u = userRepository.findById(userID).get();
+    if (StreamSupport.stream(u.getEventUserRecords().spliterator(), false)
+        .filter((x) -> x.getEvent().getId() == eventID)
+        .findAny().isPresent()) {
+      return "Signed";
+    } else {
+      if (StreamSupport.stream(queueEntryRepository.findAll().spliterator(), false)
+          .filter((x) -> x.getEventID() == eventID && x.getUserID() == userID).findAny().isPresent()) {
+        return "In Queue";
+      }
+    }
+    return "Not";
   }
 
   @MutationMapping

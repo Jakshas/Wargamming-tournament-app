@@ -24,15 +24,38 @@ export function Register(){
               }else{
                 setEr(true);
               }
-      
             }});
       }
-  
     }
+    if(loading){
+      return(<>Loading</>)
+    }
+
+    function validate():String[] {
+      const expression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      let errorTable :String[] = [];
+      if (!expression.test(email)) {
+        errorTable.push("Incorect email format");
+      }
+      if(name.length > 100){
+          errorTable.push("Name can be no longer than 100 characters");
+      }
+      if(name.length == 0){
+          errorTable.push("Name cannot be blank");
+      }
+      if(password.length <= 8 || password.length >= 30){
+        errorTable.push("Password need to be 8 to 30 characters");
+      }
+      if (rpassword !== "" && password !== rpassword) {
+        errorTable.push("Passwords need to match");
+      }
+      return errorTable;
+    }
+
+    let validation :String[] = validate();
 
     return (
     <div className="login-wrapper">
-        {loading ? <span>LOADING</span> : <div>
         <h1>Register</h1>
         <form onSubmit={handleSubmit}>
         <label>
@@ -51,13 +74,13 @@ export function Register(){
             <p>Repeat password</p>
             <input type="password" onChange={e => setRPassword(e.target.value)}/>
           </label>
-          {(rpassword !== "" && password !== rpassword) && <span>Passwords do not match</span>}
           <div>
-            <button type="submit">Submit</button>
+            <button type="submit" disabled={validation.length != 0}>Submit</button>
           </div>
         </form>
-        </div>}
+        {validation.map((error: String, idx: number) => (
+                <span key={idx} style={{color:"red"}}>{error}<br/></span>
+              ))}
         </div>
-        
     );
 }

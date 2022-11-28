@@ -16,8 +16,8 @@ interface UserProps {
 export function User(props: UserProps){
     const { user } = props;
     return(
-        <li>
-            <span> {user.id}, {user.name}, {user.email}, {user.password} </span>
-        </li>
+        <tr>
+            <td>{user.id}</td><td>{user.name}</td><td>{user.email}</td><td>{user.password}</td>
+        </tr>
     )
 }

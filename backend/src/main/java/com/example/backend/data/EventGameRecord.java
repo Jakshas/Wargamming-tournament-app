@@ -20,6 +20,15 @@ public class EventGameRecord {
     private User playerTwo;
     private int playerOnePoints;
     private int playerTwoPoints;
+    private boolean done;
+
+    public boolean getDone() {
+        return this.done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
 
     public int getId() {
         return this.id;

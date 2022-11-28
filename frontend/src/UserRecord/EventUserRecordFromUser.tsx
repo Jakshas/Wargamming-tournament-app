@@ -12,7 +12,7 @@ export function EventUserRecordFromUser(){
     return (
         <ul className="listContainer">
             {data?.events.map((event: IEventUserRecord, idx: number) => (
-              <EventUserRecord key={idx} record={event} />
+              <EventUserRecord key={idx} record={event} index={idx+1} />
             ))}
           </ul>
   );

@@ -14,6 +14,8 @@ type Event {
   participants: [User]
   maxRounds: Int!
   round: Int!
+  roundEnd: String
+  lastCalled: String
   eventGameRecords: [EventGameRecord]
   eventUserRecords: [EventUserRecord]
 }
@@ -26,6 +28,7 @@ type EventGameRecord {
   playerTwo: User
   playerOnePoints: Int!
   playerTwoPoints: Int!
+  done: Boolean!
 }
 
 type EventUserRecord {
@@ -34,18 +37,33 @@ type EventUserRecord {
   event: Event!
   rounds: Int!
   points: Int!
+  bonusPoints: Int!
   wins: Int!
   loses: Int!
   list: String!
+}
+
+type QueueEntry {
+  id: ID
+  eventID: Int!
+  userID: Int!
 }
 
 type Query {
   users: [User]!
   userByID(id: ID!): User
   events: [Event]!
+  eventByID(id: ID!): Event
   getEventUserRecordForUser(id: ID): [EventUserRecord]
   getEventUserRecordForEvent(id: ID): [EventUserRecord]
+  getEventUserRecordForEventSummary(id: ID!): [EventUserRecord]
   getEventGameRecordForEvent(id: ID): [EventGameRecord]
+  getEventGameRecordForEventForGame(id: ID, round: Int!): [EventGameRecord]
+  getQueueOfEvent(id: ID!): [QueueEntry]
+  getQueuesOfUser(id: ID!): [QueueEntry]
+  userInEvent(userID: ID!, eventID: ID!): String
+  organizedEvents(id: ID!): [Event]
+  getListForUserInEvent(eventID: ID!, userID: ID!): String
 }
 
 type Mutation {
@@ -53,7 +71,12 @@ type Mutation {
   login(email: String, password: String): String
   changePassword(id: ID!, oldPassword: String!, newPassword: String!): String
   deleteUser(id: ID!): String
-  addEvent(name: String!, organizer: ID!, maxRounds: Int!): String
+  addEvent(
+    name: String!
+    organizer: ID!
+    maxRounds: Int!
+    roundTime: Int!
+  ): String
   addParticipant(id: ID!, participant: ID!): String
   deleteEvent(id: ID!): String
   nextRound(id: ID!): String
@@ -68,6 +91,11 @@ type Mutation {
     playerOnePoints: Int!
     playerTwoPoints: Int!
   ): String
-  addUserToEvent(userID: ID!, evenID: ID!): String
+  addUserToEvent(userID: ID!, eventID: ID!): String
+  deleteUserFromEvent(id: ID!): String
   makeParings(eventID: ID!): String
+  addToQueue(eventID: ID!, userID: ID!): String
+  deleteFromQueue(id: ID!): String
+  setListForUserInEvent(eventID: ID!, userID: ID!, list: String!): String
+  setBonusPoints(id: ID!, bonusPoints: Int!): String
 }

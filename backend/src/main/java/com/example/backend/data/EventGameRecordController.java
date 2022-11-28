@@ -1,7 +1,9 @@
 package com.example.backend.data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +14,13 @@ import org.springframework.stereotype.Controller;
 
 import com.example.backend.data.repositories.EventGameRecordRepository;
 import com.example.backend.data.repositories.EventRepository;
+import com.example.backend.data.repositories.EventUserRecordRepository;
 import com.example.backend.data.repositories.UserRepository;
 
 @Controller
 public class EventGameRecordController {
+    @Autowired
+    EventUserRecordRepository eventUserRecordRepository;
 
     @Autowired
     EventGameRecordRepository eventGameRecordRepository;
@@ -47,7 +52,44 @@ public class EventGameRecordController {
         EventGameRecord n = eventGameRecordRepository.findById(matchID).get();
         n.setPlayerOnePoints(playerOnePoints);
         n.setPlayerTwoPoints(playerTwoPoints);
+        n.setDone(true);
+        List<EventUserRecord> list = StreamSupport.stream(n.getEvent().getEventUserRecords().spliterator(), false)
+                .filter((x) -> x.getUser().getId() == n.getPlayerOne().getId()
+                        || (n.getPlayerTwo() != null && x.getUser().getId() == n.getPlayerTwo().getId()))
+                .toList();
+        if (list.size() > 1) {
+            if (list.get(0).getUser().getId() == n.getPlayerOne().getId()) {
+                list.get(0).setPoints(list.get(0).getPoints() + playerOnePoints);
+                list.get(1).setPoints(list.get(1).getPoints() + playerTwoPoints);
+                if (playerOnePoints > playerTwoPoints) {
+                    list.get(0).setWins(list.get(0).getWins() + 1);
+                }
+                if (playerOnePoints < playerTwoPoints) {
+                    list.get(1).setWins(list.get(1).getWins() + 1);
+                }
+                if (playerOnePoints == playerTwoPoints) {
+                    list.get(1).setWins(list.get(1).getWins() + 1);
+                    list.get(0).setWins(list.get(0).getWins() + 1);
+                }
+            } else {
+                list.get(0).setPoints(list.get(0).getPoints() + playerTwoPoints);
+                list.get(1).setPoints(list.get(1).getPoints() + playerOnePoints);
+                if (playerOnePoints > playerTwoPoints) {
+                    list.get(1).setWins(list.get(1).getWins() + 1);
+                }
+                if (playerOnePoints < playerTwoPoints) {
+                    list.get(0).setWins(list.get(0).getWins() + 1);
+                }
+                if (playerOnePoints == playerTwoPoints) {
+                    list.get(1).setWins(list.get(1).getWins() + 1);
+                    list.get(0).setWins(list.get(0).getWins() + 1);
+                }
+            }
+        } else {
+            list.get(0).setPoints(list.get(0).getPoints() + playerOnePoints);
+        }
         eventGameRecordRepository.save(n);
+        eventUserRecordRepository.saveAll(list);
         return "Points changed";
     }
 
@@ -58,12 +100,22 @@ public class EventGameRecordController {
                 .filter((x) -> x.getEvent().getId() == id).toList();
     }
 
+    @QueryMapping
+    public Iterable<EventGameRecord> getEventGameRecordForEventForGame(@Argument(name = "id") int id,
+            @Argument(name = "round") int round) {
+
+        return StreamSupport.stream(eventGameRecordRepository.findAll().spliterator(), false)
+                .filter((x) -> x.getEvent().getId() == id & x.getRound() == round).toList();
+    }
+
     private boolean checkIfPlayed(EventUserRecord user1, EventUserRecord user2) {
         Event e = user1.getEvent();
         for (EventGameRecord iterable_element : e.getEventGameRecords()) {
             if ((user1.getUser().getId() == iterable_element.getPlayerOne().getId()
-                    && user2.getUser().getId() == iterable_element.getPlayerTwo().getId())
-                    || (user1.getUser().getId() == iterable_element.getPlayerTwo().getId()
+                    && (iterable_element.getPlayerTwo() != null
+                            && user2.getUser().getId() == iterable_element.getPlayerTwo().getId()))
+                    || ((iterable_element.getPlayerTwo() != null
+                            && user1.getUser().getId() == iterable_element.getPlayerTwo().getId())
                             && user2.getUser().getId() == iterable_element.getPlayerOne().getId())) {
                 return true;
             }
@@ -74,13 +126,19 @@ public class EventGameRecordController {
     @MutationMapping
     public String makeParings(@Argument(name = "eventID") int eventID) {
 
+        Event e = eventRepository.findById(eventID).get();
+        if (e.getMaxRounds() == e.getRound()) {
+            return "Finished";
+        }
+        e.setRoundEnd((LocalDateTime.now().plusMinutes(e.getRoundTime())).toString());
+        e.setRound(e.getRound() + 1);
         Event event = eventRepository.findById(eventID).get();
         ArrayList<EventUserRecord> eventUserRecords = new ArrayList<EventUserRecord>(event.getEventUserRecords());
         eventUserRecords.sort(new Comparator<EventUserRecord>() {
             public int compare(EventUserRecord o1, EventUserRecord o2) {
                 if (o1.getPoints() == o2.getPoints())
                     return 0;
-                return o1.getPoints() < o2.getPoints() ? -1 : 1;
+                return o1.getPoints() < o2.getPoints() ? 1 : -1;
             }
         });
         while (eventUserRecords.size() > 1) {
@@ -111,6 +169,7 @@ public class EventGameRecordController {
             n.setPlayerTwoPoints(0);
             eventGameRecordRepository.save(n);
         }
+        eventRepository.save(e);
         return "Parings made";
     }
 }

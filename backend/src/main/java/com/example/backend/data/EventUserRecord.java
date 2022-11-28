@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -22,7 +23,17 @@ public class EventUserRecord {
     private int points;
     private int wins;
     private int loses;
+    @Lob
     private String list;
+    private int bonusPoints;
+
+    public int getBonusPoints() {
+        return this.bonusPoints;
+    }
+
+    public void setBonusPoints(int bonusPoints) {
+        this.bonusPoints = bonusPoints;
+    }
 
     public int getId() {
         return this.id;

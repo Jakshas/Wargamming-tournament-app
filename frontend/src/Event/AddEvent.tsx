@@ -12,17 +12,38 @@ export function AddEvent(props: EventProps) {
     const navigate = useNavigate();
     const [name, setName] = useState("");
     const [rounds, setRounds] = useState(0);
+    const [roundTime, setRoundTime] = useState(0);
     const [ mutateFunction, {loading}] = useMutation(ADD_EVENT_MUTATION);
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        mutateFunction({variables:{name: name, maxRounds: rounds, organizer: props.organizer},
+        mutateFunction({variables:{name: name, maxRounds: rounds, organizer: props.organizer, roundTime:roundTime},
             onCompleted: (addEvent) => {
                 navigate('/event/' + addEvent.addEvent);
                 window.location.reload(); 
             }});
       }
+      function validate():String[] {
+        let errorTable :String[] = [];  
+        if (rounds == 0) {
+            errorTable.push("Rounds cannot be 0");
+        }
+        if (roundTime == 0) {
+            errorTable.push("Round time cannot be 0");
+        }
+        if (rounds > 10) {
+            errorTable.push("Rounds cannot be more than 10");
+        }
+        if(name.length > 100){
+            errorTable.push("Name can be no longer than 100 characters");
+        }
+        if(name.length == 0){
+            errorTable.push("Name cannot be blank");
+        }
+        return errorTable;
+      }
+      let validation :String[] = validate();
     return(
         <div>
             <form onSubmit={handleSubmit}>
@@ -34,10 +55,17 @@ export function AddEvent(props: EventProps) {
                 <p>Rounds</p>
                 <input type="number" onChange={e => setRounds(Number(e.target.value))}/>
             </label>
+            <label>
+                <p>Round time in minutes</p>
+                <input type="number" onChange={e => setRoundTime(Number(e.target.value))}/>
+            </label>
             <div>
-                <button type="submit">Submit</button>
+                <button type="submit" disabled={validation.length != 0}>Submit</button>
             </div>
             </form>
+            {validation.map((error: String, idx: number) => (
+                <span key={idx} style={{color:"red"}}>{error}<br/></span>
+              ))}
         </div>
     )
 }

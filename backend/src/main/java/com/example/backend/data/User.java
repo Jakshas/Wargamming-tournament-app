@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity // This tells Hibernate to make a table out of this class
@@ -24,10 +23,16 @@ public class User {
   @OneToMany(mappedBy = "organizer")
   private Set<Event> organizing;
 
-  @ManyToMany
-  private Set<Event> events;
   @OneToMany(mappedBy = "user")
   private Set<EventUserRecord> eventUserRecords;
+
+  public Set<EventUserRecord> getEventUserRecords() {
+    return this.eventUserRecords;
+  }
+
+  public void setEventUserRecords(Set<EventUserRecord> eventUserRecords) {
+    this.eventUserRecords = eventUserRecords;
+  }
 
   public Integer getId() {
     return id;
@@ -69,11 +74,4 @@ public class User {
     return organizing;
   }
 
-  public void setEvents(Set<Event> events) {
-    this.events = events;
-  }
-
-  public Set<Event> getEvents() {
-    return events;
-  }
 }

@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -19,12 +18,38 @@ public class Event {
     private String name;
     @ManyToOne
     private User organizer;
-    @ManyToMany
-    private Set<User> participants;
 
     private int round;
 
     private int maxRounds;
+
+    private String roundEnd;
+    private String lastCalled;
+    private int roundTime;
+
+    public int getRoundTime() {
+        return this.roundTime;
+    }
+
+    public void setRoundTime(int roundTime) {
+        this.roundTime = roundTime;
+    }
+
+    public String getRoundEnd() {
+        return this.roundEnd;
+    }
+
+    public void setRoundEnd(String roundEnd) {
+        this.roundEnd = roundEnd;
+    }
+
+    public String getLastCalled() {
+        return this.lastCalled;
+    }
+
+    public void setLastCalled(String lastCalled) {
+        this.lastCalled = lastCalled;
+    }
 
     @OneToMany(mappedBy = "event")
     private Set<EventGameRecord> eventGameRecords;
@@ -95,15 +120,10 @@ public class Event {
         this.organizer = organizer;
     }
 
-    public Set<User> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(Set<User> participants) {
-        this.participants = participants;
-    }
-
     public void addParticipant(User participant) {
-        this.participants.add(participant);
+        EventUserRecord eventUserRecord = new EventUserRecord();
+        eventUserRecord.setUser(participant);
+        eventUserRecord.setEvent(this);
+        this.eventUserRecords.add(eventUserRecord);
     }
 }
