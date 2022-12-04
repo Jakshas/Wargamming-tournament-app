@@ -85,6 +85,7 @@ public class UserController {
 
   @MutationMapping
   public String login(@Argument(name = "email") String email, @Argument(name = "password") String password) {
+
     User u = StreamSupport.stream(userRepository.findAll().spliterator(), false)
         .filter((x) -> x.getEmail().equals(email)).findAny().orElse(null);
     if (u != null && u.getPassword().equals(password)) {

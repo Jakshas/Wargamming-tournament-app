@@ -18,7 +18,7 @@ export function EventDetails(props: EventDetailsProps){
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
-    const [deadline, setDeadline] = useState(event.data?.eventByID.roundEnd || "");
+    const [deadline, setDeadline] = useState(event.data?.eventByID.roundEnd || "1/1/2000");
 
     function onClick(){
         mutation({variables:{eventID:id}, 

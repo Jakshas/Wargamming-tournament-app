@@ -27,18 +27,16 @@ function App() {
   const {data, error} = useQuery(USER_BY_ID_QUERY, {variables:{ userid: token }});
 
   if(!token) {
-    return <Router>
+    return(      
       <Routes>
         <Route path="*" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<Register/>} />
-      </Routes>
-      
-    </Router>
+      </Routes>)
+
   }
 
   return (
     <div>
-      <Router>
       <h2>Wargamming Tournament App</h2>
       {data !== undefined && <span>{ data.userByID.name }   </span>}
         <button onClick={() => {
@@ -77,7 +75,6 @@ function App() {
             <Route path="/event/:id/game/:gamenumber" element={<EventGameRecordFromEvent/>} />
           </Routes>
         </div>
-      </Router>
     </div>
   );
 }

@@ -96,6 +96,9 @@ export const GET_EVENT_USER_RECORD_FROM_EVENT_QUERY = gql`
         event{
           id
           name
+          organizer{
+            id
+          }
         }
         rounds
         points
@@ -252,5 +255,11 @@ export const ADD_TO_QUEUE_EVENT = gql`
 export const DELETE_FROM_QUEUE = gql`
   mutation DeleteFromQueue($id: ID!){
     deleteFromQueue(id: $id)
+  }
+`;
+
+export const DELETE_USER_FROM_EVENT = gql`
+  mutation DeleteUserFromEvent($id: ID!){
+    deleteUserFromEvent(id: $id)
   }
 `;
