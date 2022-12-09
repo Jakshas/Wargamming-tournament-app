@@ -3,7 +3,7 @@ import { GET_EVENT_USER_RECORD_FROM_EVENT_QUERY } from "../GraphQL";
 import React from "react";
 import { IEventUserRecord, EventUserRecord } from "./EventUserRecord";
 import { useParams } from "react-router-dom";
-
+import Spinner from 'react-spinner-material';
 
 export function EventUserRecordFromEvent(){
     const { id } = useParams()
@@ -11,6 +11,10 @@ export function EventUserRecordFromEvent(){
         variables: {eventid: id },
         fetchPolicy: "no-cache"
     });
+
+    if (loading) {
+      return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
+    }
 
     return (<>
     <h3>Participants</h3>
@@ -23,7 +27,7 @@ export function EventUserRecordFromEvent(){
               <th>Loses</th>
               <th>Points</th>
               <th>Bonus Points</th>
-              <th>List</th>
+              <th></th>
             </tr>
             </thead>
             <tbody>

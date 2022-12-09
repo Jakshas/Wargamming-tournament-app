@@ -25,10 +25,10 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <ApolloProvider client={client}>
-    <React.StrictMode>
-      <Router>
-        <App />
+  <ApolloProvider client={client} >
+    <React.StrictMode >
+      <Router >
+        <App/>
       </Router>
     </React.StrictMode>
   </ApolloProvider>

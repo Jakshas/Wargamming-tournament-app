@@ -1,5 +1,6 @@
 package com.example.backend.data;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
 import com.example.backend.data.repositories.EventGameRecordRepository;
@@ -18,6 +20,7 @@ import com.example.backend.data.repositories.EventUserRecordRepository;
 import com.example.backend.data.repositories.UserRepository;
 
 @Controller
+@Secured("ROLE_NORMAL")
 public class EventGameRecordController {
     @Autowired
     EventUserRecordRepository eventUserRecordRepository;
@@ -46,10 +49,13 @@ public class EventGameRecordController {
     }
 
     @MutationMapping
-    public String setMatchPoints(@Argument(name = "matchID") int matchID,
+    public String setMatchPoints(Principal principal, @Argument(name = "matchID") int matchID,
             @Argument(name = "playerOnePoints") int playerOnePoints,
             @Argument(name = "playerTwoPoints") int playerTwoPoints) {
         EventGameRecord n = eventGameRecordRepository.findById(matchID).get();
+        if (Integer.valueOf(principal.getName()) != n.getEvent().getOrganizer().getId()) {
+            return "User not autorised";
+        }
         n.setPlayerOnePoints(playerOnePoints);
         n.setPlayerTwoPoints(playerTwoPoints);
         n.setDone(true);
@@ -58,6 +64,12 @@ public class EventGameRecordController {
                         || (n.getPlayerTwo() != null && x.getUser().getId() == n.getPlayerTwo().getId()))
                 .toList();
         if (list.size() > 1) {
+            var enemiesOfUser1 = list.get(0).getEnemies();
+            enemiesOfUser1.add(n.getPlayerTwo());
+            list.get(0).setEnemies(enemiesOfUser1);
+            var enemiesOfUser2 = list.get(1).getEnemies();
+            enemiesOfUser2.add(n.getPlayerOne());
+            list.get(1).setEnemies(enemiesOfUser2);
             if (list.get(0).getUser().getId() == n.getPlayerOne().getId()) {
                 list.get(0).setPoints(list.get(0).getPoints() + playerOnePoints);
                 list.get(1).setPoints(list.get(1).getPoints() + playerTwoPoints);
@@ -124,9 +136,12 @@ public class EventGameRecordController {
     }
 
     @MutationMapping
-    public String makeParings(@Argument(name = "eventID") int eventID) {
+    public String makeParings(Principal principal, @Argument(name = "eventID") int eventID) {
 
         Event e = eventRepository.findById(eventID).get();
+        if (Integer.valueOf(principal.getName()) != e.getOrganizer().getId()) {
+            return "User not autorised";
+        }
         if (e.getMaxRounds() == e.getRound()) {
             return "Finished";
         }

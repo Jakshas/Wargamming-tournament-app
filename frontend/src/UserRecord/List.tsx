@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { GET_LIST_FOR_USER_IN_EVENT, SET_LIST_FOR_USER_IN_EVENT } from "../GraphQL";
+import Spinner from 'react-spinner-material';
 
 interface IListProps{
     token:number
@@ -19,11 +20,8 @@ export function List(params:IListProps){
     }
 
     if (loading) {
-        return(
-            <span>Loading</span>
-        )
-    }
-
+        return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
+      }
     if (params.token == Number(userID)) {
         return(<>
             <textarea defaultValue={data?.getListForUserInEvent} onChange={e => setList(e.target.value)}></textarea><br/>

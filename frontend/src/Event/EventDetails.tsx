@@ -6,7 +6,8 @@ import { EVENT_BY_ID_QUERY, MAKE_PARINGS } from "../GraphQL";
 import { QueueForEvent } from "../Queue/QueueForEvent";
 import { EventUserRecordFromEvent } from "../UserRecord/EventUserRecordFromEvent";
 import { RoundsList } from "./RoundsList";
- 
+import Spinner from 'react-spinner-material';
+
 interface EventDetailsProps{
     token:number
 }
@@ -45,15 +46,15 @@ export function EventDetails(props: EventDetailsProps){
         return () => clearInterval(interval);
       }, []);
 
-    if (loading) {
-        return(<>Loading</>)
-    }
+      if (loading) {
+        return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
+      }
 
     return(<>
         {event.loading? <span>LOADING</span>: 
-            <div style={{textAlign: "left"}}>
-                <h3>Details</h3>
+            <div>
                 {deadline !== null && <h2>{hours}:{minutes}:{seconds}</h2>}
+                <h3>Details</h3>
                 <table>  
                     <thead>
                         <tr>

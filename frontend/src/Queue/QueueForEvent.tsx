@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@apollo/client";
 import { GET_QUEUE_OF_EVENT } from "../GraphQL";
 import { QueueEntry, IQueueEntry } from "./QueueEntry";
+import Spinner from 'react-spinner-material';
 
 export interface Props{
     eventID:number
@@ -12,7 +13,9 @@ export interface Props{
 export function QueueForEvent(props:Props) {
     const { data , loading} = useQuery(GET_QUEUE_OF_EVENT, {variables:{eventID: props.eventID},fetchPolicy: "no-cache"});
 
-    if(loading) return(<span>LOADING</span>);
+    if (loading) {
+      return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
+    }
 
 
     if(data?.getQueueOfEvent.length > 0 ){

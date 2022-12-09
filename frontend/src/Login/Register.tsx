@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ADD_USER_MUTATION } from "../GraphQL"
 import { useMutation, useQuery } from "@apollo/client";
 import {useNavigate} from 'react-router-dom';
-
+import Spinner from 'react-spinner-material';
 
 export function Register(){
     const navigate = useNavigate();
@@ -27,8 +27,8 @@ export function Register(){
             }});
       }
     }
-    if(loading){
-      return(<>Loading</>)
+    if (loading) {
+      return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
     }
 
     function validate():String[] {

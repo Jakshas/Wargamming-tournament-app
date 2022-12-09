@@ -2,16 +2,18 @@ import { useQuery } from "@apollo/client";
 import React from "react";
 import { USER_QUERY } from "../GraphQL";
 import { IUser, User } from "./User";
+import Spinner from 'react-spinner-material';
 
 export function UserList() {
     const { data, error, loading } = useQuery(USER_QUERY);
   
+  if (loading) {
+    return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
+  }
     return (<div>
-      {loading ? <span>LOADING</span> :
             <table>  
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>Name</th>
                   <th>Email</th>
                 </tr>
@@ -22,7 +24,6 @@ export function UserList() {
                 ))}
               </tbody>
             </table>  
-          }
           </div>
     );
   }

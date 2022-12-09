@@ -15,6 +15,7 @@ export interface IEventUserRecordSummary {
     loses: number
     list: String
     bonusPoints: number
+    sos: number
   }
 
 interface EventUserRecordSummaryProps {
@@ -32,11 +33,12 @@ export function EventUserRecordSummary(props: EventUserRecordSummaryProps){
     return(
         <tr>
              <td>{index}</td>
-             <td>{record.user.name}</td>
+             <td>{record.user.name}</td> 
              <td>{record.wins}</td>
              <td>{record.loses}</td>
              <td>{record.points}</td>
-             <td><button onClick={onClick}>List</button></td>
+             <td>{record.sos}</td>
+             <td><button className="ListButton" onClick={onClick}>List</button></td>
         </tr>
     )
 }

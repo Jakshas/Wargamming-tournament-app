@@ -31,8 +31,12 @@ export function EventGameRecord(props: EventGameRecordProps){
     }
 
     return(
-        <tr style={(!record.done && enable) ? {}:{backgroundColor: "lightblue"}}>
-            <td>{record.playerOne.name}</td><td><input type="number" defaultValue={playerOnePoints} onChange={e => setplayerOnePoints(Number(e.target.value))}></input></td><td>{record.playerTwo ? record.playerTwo.name: "BYE" }</td><td><input type="number" disabled={!record.playerTwo} defaultValue={playerTwoPoints} onChange={e => setplayerTwoPoints(Number(e.target.value))}></input></td><td>{(!record.done && enable) && <button onClick={onClick}>Settle score</button>}</td>
+        <tr className={(!record.done && enable) ? "none" : "Settled"}>
+            <td>{record.playerOne.name}</td>
+            <td><input type="number" defaultValue={playerOnePoints} onChange={e => setplayerOnePoints(Number(e.target.value))}></input></td>
+            <td>{record.playerTwo ? record.playerTwo.name: "BYE" }</td>
+            <td><input type="number" disabled={!record.playerTwo} defaultValue={playerTwoPoints} onChange={e => setplayerTwoPoints(Number(e.target.value))}></input></td>
+            <td>{(!record.done && enable) && <button onClick={onClick}>Settle score</button>}</td>
         </tr>
     )
 }

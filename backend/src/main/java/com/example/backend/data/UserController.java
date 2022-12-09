@@ -1,5 +1,6 @@
 package com.example.backend.data;
 
+import java.security.Principal;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -7,29 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
 import com.example.backend.data.repositories.QueueEntryRepository;
 import com.example.backend.data.repositories.UserRepository;
 
 @Controller
+@Secured("ROLE_NORMAL")
 public class UserController {
   @Autowired
   private UserRepository userRepository;
   @Autowired
   private QueueEntryRepository queueEntryRepository;
-
-  @MutationMapping
-  public String addUser(@Argument(name = "name") String name, @Argument(name = "email") String email,
-      @Argument(name = "password") String password) {
-
-    User n = new User();
-    n.setPassword(password);
-    n.setName(name);
-    n.setEmail(email);
-    userRepository.save(n);
-    return "Added";
-  }
 
   @MutationMapping
   public String changePassword(@Argument(name = "id") int id, @Argument(name = "oldPassword") String oldPassword,
@@ -83,14 +74,4 @@ public class UserController {
     return "Not";
   }
 
-  @MutationMapping
-  public String login(@Argument(name = "email") String email, @Argument(name = "password") String password) {
-
-    User u = StreamSupport.stream(userRepository.findAll().spliterator(), false)
-        .filter((x) -> x.getEmail().equals(email)).findAny().orElse(null);
-    if (u != null && u.getPassword().equals(password)) {
-      return u.getId().toString();
-    }
-    return "Wrong";
-  }
 }

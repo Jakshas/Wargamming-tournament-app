@@ -1,5 +1,6 @@
 package com.example.backend.data;
 
+import java.security.Principal;
 import java.util.Comparator;
 import java.util.stream.StreamSupport;
 
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
 import com.example.backend.data.repositories.EventRepository;
@@ -14,6 +16,7 @@ import com.example.backend.data.repositories.EventUserRecordRepository;
 import com.example.backend.data.repositories.UserRepository;
 
 @Controller
+@Secured("ROLE_NORMAL")
 public class EventUserRecordController {
     @Autowired
     EventUserRecordRepository eventUserRecordRepository;
@@ -46,33 +49,58 @@ public class EventUserRecordController {
         var s = StreamSupport.stream(eventUserRecordRepository.findAll().spliterator(), false)
                 .filter((x) -> x.getEvent().getId() == id).toList();
         s.forEach((x) -> x.setPoints(x.getBonusPoints() + x.getPoints()));
+        s.forEach((x) -> {
+            float sum = 0;
+            for (var v : x.getEnemies()) {
+                var c = StreamSupport.stream(v.getEventUserRecords().spliterator(), false)
+                        .filter((y) -> y.getEvent().getId() == id).findFirst().get();
+                sum += c.getPoints();
+            }
+            sum = sum / x.getEnemies().size();
+            x.setSos(sum);
+        });
+
         return StreamSupport.stream(s.spliterator(), false)
-                .sorted(Comparator.comparingInt(EventUserRecord::getPoints).reversed())
+                .sorted(Comparator.comparingInt(EventUserRecord::getPoints).reversed()
+                        .thenComparing(Comparator.comparingDouble(EventUserRecord::getSos).reversed()))
                 .toList();
     }
 
     @MutationMapping
-    public String addUserToEvent(@Argument(name = "userID") int userID, @Argument(name = "eventID") int eventID) {
+    public String addUserToEvent(Principal principal, @Argument(name = "userID") int userID,
+            @Argument(name = "eventID") int eventID) {
+        Event e = eventRepository.findById(eventID).get();
+        if (Integer.valueOf(principal.getName()) != e.getOrganizer().getId()) {
+            return "User not autorised";
+        }
         EventUserRecord n = new EventUserRecord();
         n.setUser(userRepository.findById(userID).get());
         n.setEvent(eventRepository.findById(eventID).get());
         n.setPoints(0);
         n.setList("");
         n.setBonusPoints(0);
+        n.setSos(0);
         eventUserRecordRepository.save(n);
         return "Added";
     }
 
     @MutationMapping
-    public String deleteUserFromEvent(@Argument(name = "id") int id) {
+    public String deleteUserFromEvent(Principal principal, @Argument(name = "id") int id) {
+        var e = eventUserRecordRepository.findById(id).get();
+        if (Integer.valueOf(principal.getName()) != e.getEvent().getOrganizer().getId()) {
+            return "User not autorised";
+        }
         eventUserRecordRepository.deleteById(id);
         return "Deleted";
     }
 
     @MutationMapping
-    public String setBonusPoints(@Argument(name = "id") int id,
+    public String setBonusPoints(Principal principal, @Argument(name = "id") int id,
             @Argument(name = "bonusPoints") int bonusPoints) {
         EventUserRecord record = eventUserRecordRepository.findById(id).get();
+        if (Integer.valueOf(principal.getName()) != record.getEvent().getOrganizer().getId()) {
+            return "User not autorised";
+        }
         record.setBonusPoints(bonusPoints);
         eventUserRecordRepository.save(record);
         return "Deleted";

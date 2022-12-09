@@ -41,6 +41,7 @@ type EventUserRecord {
   wins: Int!
   loses: Int!
   list: String!
+  sos: Float!
 }
 
 type QueueEntry {
@@ -64,6 +65,7 @@ type Query {
   userInEvent(userID: ID!, eventID: ID!): String
   organizedEvents(id: ID!): [Event]
   getListForUserInEvent(eventID: ID!, userID: ID!): String
+  eventsOfUser(id: ID!): [Event]
 }
 
 type Mutation {

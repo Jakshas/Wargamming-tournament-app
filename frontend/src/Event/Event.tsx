@@ -4,6 +4,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
 import { IEventGameRecord } from "../GameRecord/EventGameRecord";
 import { IEventUserRecord } from "../UserRecord/EventUserRecord";
+import Spinner from 'react-spinner-material';
 
 export interface IEvent {
     id: number
@@ -29,6 +30,10 @@ export function Event(props: EventProps){
   const [mutatefunction, {loading}] = useMutation(ADD_TO_QUEUE_EVENT)
   const { event } = props;
 
+  if (loading) {
+    return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
+  }
+
   function onClick(){
     mutatefunction({
       variables:{eventID: props.event.id, userID: props.user}, 
@@ -38,8 +43,8 @@ export function Event(props: EventProps){
 
   return(
       <tr>
-            <td>{event.id}</td><td><Link to={"/event/"+event.id}>{event.name}</Link></td><td>{user.data && user.data.userByID.name}</td> 
-          <td>{inevent.data && (inevent.data.userInEvent == "Not" ? <button disabled ={inevent.loading} onClick={onClick}>Sign up</button> : inevent.data.userInEvent)}</td>
+            <td><Link to={"/event/"+event.id}>{event.name}</Link></td><td>{user.data && user.data.userByID.name}</td> 
+          <td>{inevent.data && (inevent.data.userInEvent == "Not" ? <button className="SignButton" disabled ={inevent.loading} onClick={onClick}>Sign up</button> : inevent.data.userInEvent)}</td>
       </tr>
   )
 }

@@ -4,8 +4,18 @@ import { Link } from "react-router-dom";
 import { LOGIN_MUTATION} from "../GraphQL"
 import { useMutation} from "@apollo/client";
 import {useNavigate} from 'react-router-dom';
+import useID from '../useID';
+interface RetLog{
+  id:number
+  key:string
+}
 
-export function Login( {setToken}: {setToken: React.Dispatch<React.SetStateAction<string>>}){
+interface LoginProps{
+  setToken: React.Dispatch<React.SetStateAction<string>>
+  setID:React.Dispatch<React.SetStateAction<string>>
+}
+
+export function Login( props: LoginProps){
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +27,10 @@ export function Login( {setToken}: {setToken: React.Dispatch<React.SetStateActio
     mutateFunction({variables:{email: email, password: password},
       onCompleted: ({ login }) => {
         if (login != "Wrong") {
-          setToken(login)
+          let obj: RetLog = JSON.parse(login);
+
+          props.setID(obj.id.toString());
+          props.setToken(obj.key);
           navigate('/');
           window.location.reload(); 
         }else{

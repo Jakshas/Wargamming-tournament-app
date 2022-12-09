@@ -3,10 +3,15 @@ package com.example.backend.data;
 import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class User {
@@ -25,6 +30,12 @@ public class User {
 
   @OneToMany(mappedBy = "user")
   private Set<EventUserRecord> eventUserRecords;
+
+  @Enumerated(EnumType.STRING)
+  private Role role;
+
+  @ManyToMany
+  private Set<EventUserRecord> enemies;
 
   public Set<EventUserRecord> getEventUserRecords() {
     return this.eventUserRecords;
@@ -74,4 +85,13 @@ public class User {
     return organizing;
   }
 
+  public enum Role implements GrantedAuthority {
+    NORMAL,
+    BAD;
+
+    @Override
+    public String getAuthority() {
+      return "ROLE_" + this.name();
+    }
+  }
 }

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ADD_EVENT_MUTATION } from "../GraphQL";
 import { IUser } from "../User/User";
+import Spinner from 'react-spinner-material';
 
 interface EventProps{
     organizer: string;
@@ -14,6 +15,10 @@ export function AddEvent(props: EventProps) {
     const [rounds, setRounds] = useState(0);
     const [roundTime, setRoundTime] = useState(0);
     const [ mutateFunction, {loading}] = useMutation(ADD_EVENT_MUTATION);
+
+    if (loading) {
+        return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
+      }
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -60,7 +65,7 @@ export function AddEvent(props: EventProps) {
                 <input type="number" onChange={e => setRoundTime(Number(e.target.value))}/>
             </label>
             <div>
-                <button type="submit" disabled={validation.length != 0}>Submit</button>
+                <button className="SubbmitButton" type="submit" disabled={validation.length != 0}>Submit</button>
             </div>
             </form>
             {validation.map((error: String, idx: number) => (

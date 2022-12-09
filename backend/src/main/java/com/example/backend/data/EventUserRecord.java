@@ -1,10 +1,13 @@
 package com.example.backend.data;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -26,6 +29,26 @@ public class EventUserRecord {
     @Lob
     private String list;
     private int bonusPoints;
+    private float Sos;
+
+    @ManyToMany
+    private Set<User> enemies;
+
+    public Set<User> getEnemies() {
+        return this.enemies;
+    }
+
+    public void setEnemies(Set<User> enemies) {
+        this.enemies = enemies;
+    }
+
+    public float getSos() {
+        return this.Sos;
+    }
+
+    public void setSos(float Sos) {
+        this.Sos = Sos;
+    }
 
     public int getBonusPoints() {
         return this.bonusPoints;

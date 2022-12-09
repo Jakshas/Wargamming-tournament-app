@@ -50,8 +50,8 @@ export function EventUserRecord(props: EventUserRecordProps){
              <td>{record.loses}</td>
              <td>{record.points}</td>
              <td><input type="number" defaultValue={bonuspoints} onChange={e => setBonusPoints(Number(e.target.value))} onBlur={onBlur}/></td>
-             <td><button onClick={onClickList}>List</button></td>
-             {record.event.organizer.id == Number(token) && <td><button onClick={() =>setOpen(true)}>Delete user</button></td>}
+             <td><button className="ListButton" onClick={onClickList}>List</button></td>
+             {record.event.organizer.id == Number(token) && <td><button className="ListButton" onClick={() =>setOpen(true)}>Delete user</button></td>}
         </tr>
         <Confirm
             isOpen={open}

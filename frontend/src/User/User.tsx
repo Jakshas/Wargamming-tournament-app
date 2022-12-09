@@ -17,7 +17,7 @@ export function User(props: UserProps){
     const { user } = props;
     return(
         <tr>
-            <td>{user.id}</td><td>{user.name}</td><td>{user.email}</td><td>{user.password}</td>
+            <td>{user.name}</td><td>{user.email}</td>
         </tr>
     )
 }

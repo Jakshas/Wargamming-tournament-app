@@ -35,6 +35,19 @@ export const EVENT_QUERY = gql`
   }
 `;
 
+export const EVENTS_OF_USER = gql`
+  query EventsOfUser($userid: ID!){
+    eventsOfUser(id: $userid) {
+      id
+      name
+      organizer{
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const USER_BY_ID_QUERY = gql`
   query UserByID($userid: ID!){
     userByID(id: $userid) {
@@ -128,6 +141,7 @@ export const GET_EVENT_USER_RECORD_FROM_EVENT_SUMMARY_QUERY = gql`
         loses
         list
         bonusPoints
+        sos
       }
     }
 `;

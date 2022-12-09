@@ -3,13 +3,15 @@ import { GET_EVENT_GAME_RECORD_FROM_EVENT_FOR_GAME_QUERY, GET_EVENT_GAME_RECORD_
 import React from "react";
 import { IEventGameRecord, EventGameRecord } from "./EventGameRecord";
 import { Link, useParams } from "react-router-dom";
+import Spinner from 'react-spinner-material';
+
 export function EventGameRecordFromEvent(){
     const { id, gamenumber } = useParams()
     const { data, error, loading } = useQuery(GET_EVENT_GAME_RECORD_FROM_EVENT_FOR_GAME_QUERY, {
         variables: {eventid: id, round: gamenumber },fetchPolicy:"no-cache"
     });
     if (loading) {
-      return(<>Loading</>)
+      return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
     }
 
     return (
