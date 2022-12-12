@@ -89,6 +89,33 @@ button.TitleHeader{
   padding-left: 4px;
   padding-right: 4px;
 }
+.SignButton:disabled{
+  padding: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
+  color: rgb(90, 90, 90);
+  background-color: #283955;
+}
+
+.Round{
+  box-sizing: border-box;
+  text-align: center;
+  width: 13%;
+  min-width: 170px;
+  padding: 20px;
+  margin: 5px;
+  border: 2px;
+  border-style: solid;
+  background-color: #3f5983;
+  border-radius: 25px;
+  border-style: outset;
+  font-size: 20px;
+}
+.RoundBox{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 
 .SubbmitButton{
   margin-top: 10px;
@@ -98,6 +125,7 @@ button.TitleHeader{
   background-color: #3f5983;
   color: rgb(207, 207, 207) ;
 }
+
 .SubbmitButton:disabled{
   padding: 10px;
   border-radius: 15px;
@@ -111,6 +139,26 @@ button.TitleHeader{
 input{
   font-size: 20px;
 }
+
+.EventDetails{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.Register{
+  box-sizing: border-box;
+  text-align: center;
+  width:fit-content;
+  padding: 15px;
+  margin: 5px;
+  border: 2px;
+  border-style: solid;
+  background-color: #3f5983;
+  border-radius: 25px;
+  border-style: outset;
+  font-size: 20px;
+}
+
 
 .Login{
   font-size: 25px;

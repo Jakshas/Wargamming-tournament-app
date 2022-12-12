@@ -6,6 +6,11 @@ type User {
   events: [Event]
   eventUserRecords: [EventUserRecord]
 }
+enum State {
+  DONE
+  INPROGRESS
+  BEFORE
+}
 
 type Event {
   id: ID!
@@ -16,6 +21,7 @@ type Event {
   round: Int!
   roundEnd: String
   lastCalled: String
+  state: State!
   eventGameRecords: [EventGameRecord]
   eventUserRecords: [EventUserRecord]
 }
@@ -42,12 +48,19 @@ type EventUserRecord {
   loses: Int!
   list: String!
   sos: Float!
+  place: Int
 }
 
 type QueueEntry {
   id: ID
   eventID: Int!
   userID: Int!
+}
+
+type UserStats {
+  wins: Int!
+  loses: Int!
+  averagePoints: Float!
 }
 
 type Query {
@@ -66,6 +79,8 @@ type Query {
   organizedEvents(id: ID!): [Event]
   getListForUserInEvent(eventID: ID!, userID: ID!): String
   eventsOfUser(id: ID!): [Event]
+  statsForUser(id: ID!): UserStats
+  getPlaceForUserInEvent(userID: ID!, eventID: ID!): Int
 }
 
 type Mutation {

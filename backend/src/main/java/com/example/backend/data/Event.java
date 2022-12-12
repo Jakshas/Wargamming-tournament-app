@@ -12,20 +12,32 @@ import javax.persistence.OneToMany;
 @Entity
 public class Event {
 
+    enum State {
+        DONE,
+        INPROGRESS,
+        BEFORE
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     @ManyToOne
     private User organizer;
-
     private int round;
-
     private int maxRounds;
-
     private String roundEnd;
     private String lastCalled;
     private int roundTime;
+    private State state;
+
+    public State getState() {
+        return this.state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
 
     public int getRoundTime() {
         return this.roundTime;

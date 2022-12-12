@@ -17,6 +17,7 @@ export interface IEvent {
     lastCalled: String
     eventGameRecords: [IEventGameRecord]
     eventUserRecords: [IEventUserRecord]
+    state: "DONE" | "INPROGRESS" | "BEFORE"
   }
 
 interface EventProps {
@@ -30,8 +31,12 @@ export function Event(props: EventProps){
   const [mutatefunction, {loading}] = useMutation(ADD_TO_QUEUE_EVENT)
   const { event } = props;
 
-  if (loading) {
+  if (loading || inevent.loading || user.loading) {
     return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
+  }
+
+  function checkStatus(){
+    return props.event.state == "BEFORE"? (inevent.data && (inevent.data.userInEvent == "Not" ? <button className="SignButton" disabled ={inevent.loading} onClick={onClick}>Sign up</button> : inevent.data.userInEvent)): (props.event.state == "INPROGRESS" ? "In Progress":"Done")
   }
 
   function onClick(){
@@ -44,7 +49,7 @@ export function Event(props: EventProps){
   return(
       <tr>
             <td><Link to={"/event/"+event.id}>{event.name}</Link></td><td>{user.data && user.data.userByID.name}</td> 
-          <td>{inevent.data && (inevent.data.userInEvent == "Not" ? <button className="SignButton" disabled ={inevent.loading} onClick={onClick}>Sign up</button> : inevent.data.userInEvent)}</td>
+          <td>{checkStatus()}</td>
       </tr>
   )
 }

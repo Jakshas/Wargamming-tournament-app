@@ -2,6 +2,7 @@ package com.example.backend.data;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,7 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class EventUserRecord {
+public class EventUserRecord implements Comparable<EventUserRecord> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
@@ -19,8 +20,10 @@ public class EventUserRecord {
     @ManyToOne
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Event event;
+
+    private int place;
 
     private int rounds;
     private int points;
@@ -33,6 +36,14 @@ public class EventUserRecord {
 
     @ManyToMany
     private Set<User> enemies;
+
+    public int getPlace() {
+        return this.place;
+    }
+
+    public void setPlace(int place) {
+        this.place = place;
+    }
 
     public Set<User> getEnemies() {
         return this.enemies;
@@ -120,6 +131,22 @@ public class EventUserRecord {
 
     public void setList(String list) {
         this.list = list;
+    }
+
+    @Override
+    public int compareTo(EventUserRecord arg0) {
+        if (this.points + this.bonusPoints == arg0.points + arg0.bonusPoints) {
+            if (this.Sos > arg0.Sos) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+        if (this.points + this.bonusPoints > arg0.points + arg0.bonusPoints) {
+            return -1;
+        } else {
+            return 1;
+        }
     }
 
 }

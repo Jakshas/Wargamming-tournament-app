@@ -1,14 +1,14 @@
 import { useQuery } from "@apollo/client";
 import { GET_EVENT_USER_RECORD_FROM_USER_QUERY } from "../GraphQL";
 import React from "react";
-import { IEventUserRecord, EventUserRecord } from "./EventUserRecord";
-import { useParams } from "react-router-dom";
+import { IEventUserRecord, EventUserRecordDetails } from "./EventUserRecordDetails";
+import { Link, useParams } from "react-router-dom";
 import Spinner from 'react-spinner-material';
 
 export function EventUserRecordFromUser(){
     const { id } = useParams()
     const { data, error, loading } = useQuery(GET_EVENT_USER_RECORD_FROM_USER_QUERY, {
-        variables: { id }
+        variables: {userid: id }
     });
 
     if (loading) {
@@ -16,10 +16,23 @@ export function EventUserRecordFromUser(){
     }
 
     return (
-        <ul className="listContainer">
-            {data?.events.map((event: IEventUserRecord, idx: number) => (
-              <EventUserRecord key={idx} record={event} index={idx+1} />
-            ))}
-          </ul>
+        <table>
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Place</th>
+              <th>Wins</th>
+              <th>Loses</th>
+              <th>Points</th>
+              <th>Bonus Points</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {data?.getEventUserRecordForUser.map((event: IEventUserRecord, idx: number) => (
+              <EventUserRecordDetails key={idx} record={event} index={idx+1} />
+            ))}      
+          </tbody>
+          </table>
   );
 }

@@ -65,19 +65,21 @@ public class EventGameRecordController {
                 .toList();
         if (list.size() > 1) {
             var enemiesOfUser1 = list.get(0).getEnemies();
-            enemiesOfUser1.add(n.getPlayerTwo());
+            enemiesOfUser1.add(list.get(1).getUser());
             list.get(0).setEnemies(enemiesOfUser1);
             var enemiesOfUser2 = list.get(1).getEnemies();
-            enemiesOfUser2.add(n.getPlayerOne());
+            enemiesOfUser2.add(list.get(0).getUser());
             list.get(1).setEnemies(enemiesOfUser2);
             if (list.get(0).getUser().getId() == n.getPlayerOne().getId()) {
                 list.get(0).setPoints(list.get(0).getPoints() + playerOnePoints);
                 list.get(1).setPoints(list.get(1).getPoints() + playerTwoPoints);
                 if (playerOnePoints > playerTwoPoints) {
                     list.get(0).setWins(list.get(0).getWins() + 1);
+                    list.get(1).setLoses(list.get(1).getLoses() + 1);
                 }
                 if (playerOnePoints < playerTwoPoints) {
                     list.get(1).setWins(list.get(1).getWins() + 1);
+                    list.get(0).setLoses(list.get(0).getLoses() + 1);
                 }
                 if (playerOnePoints == playerTwoPoints) {
                     list.get(1).setWins(list.get(1).getWins() + 1);
@@ -88,9 +90,11 @@ public class EventGameRecordController {
                 list.get(1).setPoints(list.get(1).getPoints() + playerOnePoints);
                 if (playerOnePoints > playerTwoPoints) {
                     list.get(1).setWins(list.get(1).getWins() + 1);
+                    list.get(0).setLoses(list.get(0).getLoses() + 1);
                 }
                 if (playerOnePoints < playerTwoPoints) {
                     list.get(0).setWins(list.get(0).getWins() + 1);
+                    list.get(1).setLoses(list.get(1).getLoses() + 1);
                 }
                 if (playerOnePoints == playerTwoPoints) {
                     list.get(1).setWins(list.get(1).getWins() + 1);
@@ -143,7 +147,13 @@ public class EventGameRecordController {
             return "User not autorised";
         }
         if (e.getMaxRounds() == e.getRound()) {
+            e.setRound(e.getRound() + 1);
+            e.setState(Event.State.DONE);
+            eventRepository.save(e);
             return "Finished";
+        }
+        if (e.getRound() == 0) {
+            e.setState(Event.State.INPROGRESS);
         }
         e.setRoundEnd((LocalDateTime.now().plusMinutes(e.getRoundTime())).toString());
         e.setRound(e.getRound() + 1);

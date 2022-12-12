@@ -28,8 +28,6 @@ export function EventList(props: EventListProps){
     }
     
     events = events.filter((event:IEvent) => event.name.includes(inputValue));
-    
-
 
     return (
       <div style={{textAlign: "left"}}>

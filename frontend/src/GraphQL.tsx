@@ -31,6 +31,7 @@ export const EVENT_QUERY = gql`
       organizer{
         id
       }
+      state
     }
   }
 `;
@@ -75,6 +76,7 @@ export const EVENT_BY_ID_QUERY = gql`
       eventGameRecords{
         id
       }
+      state
     }
   }
 `;
@@ -88,12 +90,15 @@ export const GET_EVENT_USER_RECORD_FROM_USER_QUERY = gql`
         }
         event{
           id
+          name
         }
         rounds
         points
         wins
         loses
         list
+        place
+        bonusPoints
       }
     }
 `;
@@ -144,6 +149,16 @@ export const GET_EVENT_USER_RECORD_FROM_EVENT_SUMMARY_QUERY = gql`
         sos
       }
     }
+`;
+
+export const STATS_FOR_USER = gql`
+  query StatsForUser($id: ID!){
+    statsForUser(id: $id){
+      wins
+      loses
+      averagePoints
+    }
+}
 `;
 
 export const ADD_USER_TO_EVENT_QUERY = gql`

@@ -5,6 +5,7 @@ import { LOGIN_MUTATION} from "../GraphQL"
 import { useMutation} from "@apollo/client";
 import {useNavigate} from 'react-router-dom';
 import useID from '../useID';
+import Spinner from "react-spinner-material";
 interface RetLog{
   id:number
   key:string
@@ -41,6 +42,10 @@ export function Login( props: LoginProps){
 
   }
 
+  if (loading) {
+    return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
+  }
+
     return (
       <div className="login-wrapper">
         {loading ? <span>LOADING</span> : <div>
@@ -58,7 +63,7 @@ export function Login( props: LoginProps){
             <button type="submit">Submit</button>
           </div>
         </form>
-        <Link to="/Register">Register</Link><br/>
+        <div className="Register"><Link to="/Register">Register</Link></div>
         </div>}
         {er && <span>Wrong password or error</span>}
       </div>

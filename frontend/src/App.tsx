@@ -7,6 +7,7 @@ import {
   useNavigate
 } from "react-router-dom";
 import { UserList } from "./User/UserList"
+import { UserDetails } from "./User/UserDetails"
 import { Login } from "./Login/Login"
 import { Register } from "./Login/Register"
 import { EventList } from "./Event/EventList"
@@ -70,6 +71,9 @@ function App() {
           <Link to="/">Home</Link>
         </li>
         <li>
+          <Link to={"/user/"+ID}>User Details</Link>
+        </li>
+        <li>
           <Link to="/userlist">Users</Link>
         </li>
         <li>
@@ -79,6 +83,7 @@ function App() {
           <Link to="/event/add">Add Event</Link>
         </li>
 
+
       </ul>
         <div>
           <Routes>
@@ -87,7 +92,7 @@ function App() {
             <Route path="/eventlist" element={<EventList user={Number(ID)} />} />
             <Route path="/myevents" element={<EventsForUser user={Number(ID)} />} />
             <Route path="/eventlist/organizing" element={<EventOrgaznizingList user={Number(ID)} />} />
-            <Route path="/user/:id" element={<EventUserRecordFromUser/>} />
+            <Route path="/user/:id" element={<UserDetails/>} />
             <Route path="/event/:id" element={<EventDetails token={Number(ID)}/>} />
             <Route path="/event/:id/summary" element={<EventSumarry/>} />
             <Route path="/event/add" element={<AddEvent organizer={ID ? ID : ""} />} />

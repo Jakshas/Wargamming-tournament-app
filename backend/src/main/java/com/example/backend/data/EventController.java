@@ -36,6 +36,7 @@ public class EventController {
         n.setMaxRound(maxRounds);
         n.setOrganizer(userRepository.findById(organizer).get());
         n.setRoundTime(roundTime);
+        n.setState(Event.State.BEFORE);
         eventRepository.save(n);
         return n.getId().toString();
     }

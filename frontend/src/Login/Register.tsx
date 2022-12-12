@@ -46,7 +46,7 @@ export function Register(){
       if(password.length <= 8 || password.length >= 30){
         errorTable.push("Password need to be 8 to 30 characters");
       }
-      if (rpassword !== "" && password !== rpassword) {
+      if (password !== "" && password !== rpassword) {
         errorTable.push("Passwords need to match");
       }
       return errorTable;

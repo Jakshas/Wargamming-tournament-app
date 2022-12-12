@@ -2,11 +2,12 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { EVENT_BY_ID_QUERY, MAKE_PARINGS } from "../GraphQL";
+import { ADD_TO_QUEUE_EVENT, EVENT_BY_ID_QUERY, GET_QUEUE_OF_EVENT, MAKE_PARINGS, USER_IN_EVENT } from "../GraphQL";
 import { QueueForEvent } from "../Queue/QueueForEvent";
 import { EventUserRecordFromEvent } from "../UserRecord/EventUserRecordFromEvent";
 import { RoundsList } from "./RoundsList";
 import Spinner from 'react-spinner-material';
+import useID from "../useID";
 
 interface EventDetailsProps{
     token:number
@@ -14,8 +15,11 @@ interface EventDetailsProps{
 
 export function EventDetails(props: EventDetailsProps){
     const { id } = useParams()
+    const {ID, setID} = useID();
     const event = useQuery(EVENT_BY_ID_QUERY,{variables:{id:id}});
+    const inevent = useQuery(USER_IN_EVENT, {variables:{ userID: ID, eventID: id }});
     const [mutation, {data, loading}] = useMutation(MAKE_PARINGS);
+    const [mutatefunction] = useMutation(ADD_TO_QUEUE_EVENT)
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
@@ -26,6 +30,13 @@ export function EventDetails(props: EventDetailsProps){
         onCompleted: () => {
             window.location.reload(); 
         }});
+    }
+
+    function onClickSignup(){
+        mutatefunction({
+            variables:{eventID: id, userID: ID}, 
+            refetchQueries: [{query: USER_IN_EVENT,variables:{ userID: ID, eventID: id }}, {query: GET_QUEUE_OF_EVENT, variables:{eventID: id}}]
+          });
     }
     const getTime = () => {
         const time = Date.parse(deadline) - Date.now();
@@ -46,7 +57,7 @@ export function EventDetails(props: EventDetailsProps){
         return () => clearInterval(interval);
       }, []);
 
-      if (loading) {
+      if (loading || event.loading || inevent.loading) {
         return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
       }
 
@@ -55,27 +66,30 @@ export function EventDetails(props: EventDetailsProps){
             <div>
                 {deadline !== null && <h2>{hours}:{minutes}:{seconds}</h2>}
                 <h3>Details</h3>
-                <table>  
-                    <thead>
-                        <tr>
-                            <th>Event name</th>
-                            <th>Rounds</th>
-                            <th>Number of participants</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{event.data?.eventByID.name}</td>
-                            <td>{event.data?.eventByID.maxRounds}</td>
-                            <td>{event.data?.eventByID.eventUserRecords.length}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div className="EventDetails">
+                    <table>  
+                        <thead>
+                            <tr>
+                                <th>Event name</th>
+                                <th>Rounds</th>
+                                <th>Number of participants</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{event.data?.eventByID.name}</td>
+                                <td>{event.data?.eventByID.maxRounds}</td>
+                                <td>{event.data?.eventByID.eventUserRecords.length}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    {inevent.data.userInEvent == "Not" && <button className="SignButton" disabled ={inevent.loading} onClick={onClickSignup}>Sign up</button>}
+                </div>
                 <EventUserRecordFromEvent />
                 <QueueForEvent eventID={Number(id)} organizerID={event.data?.eventByID.organizer.id} token={props.token}/>
                 <RoundsList rounds={event.data?.eventByID.round} maxRounds={event.data?.eventByID.maxRounds} eventID={Number(id)}/><br/>
-                {event.data?.eventByID.round == event.data?.eventByID.maxRounds ? <Link to={"/event/"+ id +"/summary"} >Summary of Event</Link> :
-                <button onClick={onClick}>{event.data?.eventByID.round == 0 ? "Start Event" : "Next Round"}</button>}
+                {event.data?.eventByID.round == event.data?.eventByID.maxRounds + 1 ? <div className="Round"><Link to={"/event/"+ id +"/summary"} >Summary of Event</Link></div> :
+                event.data?.eventByID.organizer.id == ID && <button onClick={onClick}>{event.data?.eventByID.round == 0 ? "Start Event" : event.data?.eventByID.round == event.data?.eventByID.maxRounds ? "End Event" : "Next Round"}</button>}
             </div>}
     </>)
 }
