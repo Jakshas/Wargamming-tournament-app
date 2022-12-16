@@ -38,7 +38,7 @@ export function QueueEntry(props: QueueEntryProps) {
             {userByID.loading ? <></> : 
             <> 
                 <td>{userByID.data.userByID.name}</td>
-            <td>{lookinguserID == organizerID && <button disabled = {enabled} onClick={onClick}>Accept</button>}</td>
+            {lookinguserID == organizerID && <td><button disabled = {enabled} onClick={onClick}>Accept</button></td>}
          </>}
 
     </tr>

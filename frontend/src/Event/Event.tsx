@@ -48,8 +48,9 @@ export function Event(props: EventProps){
 
   return(
       <tr>
-            <td><Link to={"/event/"+event.id}>{event.name}</Link></td><td>{user.data && user.data.userByID.name}</td> 
-          <td>{checkStatus()}</td>
+            <td><Link to={"/event/"+event.id}>{event.name}</Link></td>
+            <td>{user.data && user.data.userByID.name}</td> 
+            <td>{checkStatus()}</td>
       </tr>
   )
 }

@@ -25,7 +25,6 @@ export function QueueForEvent(props:Props) {
             <thead>
               <tr>
                 <th>Name</th>
-                <th></th>
               </tr>
               </thead>
               <tbody>

@@ -16,24 +16,24 @@ export function EventGameRecordFromEvent(){
 
     return (
     <div style={{textAlign:"left"}}>
-      <Link to={"/event/"+ id}>Back to Event</Link>
         <table>
           
             <thead>
               <tr>
+                <th>Table</th>
                 <th>Player one name</th>
                 <th>Player one points</th>
                 <th>Player two name</th>
                 <th>Player two points</th>
-                <th></th>
               </tr>
             </thead>
           <tbody>
             {data?.getEventGameRecordForEventForGame.map((event: IEventGameRecord, idx: number) => (
-              <EventGameRecord key={idx} record={event} />
+              <EventGameRecord key={idx} record={event} index={idx+1} />
             ))}
           </tbody>
         </table>
+        <div className="Navdiv"><Link to={"/event/"+ id}>Back to Event</Link></div>
       </div>
   );
 }

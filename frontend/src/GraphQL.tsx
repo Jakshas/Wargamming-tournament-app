@@ -200,6 +200,9 @@ export const GET_EVENT_GAME_RECORD_FROM_EVENT_FOR_GAME_QUERY = gql`
         id
         event{
           id
+          organizer{
+            id
+          }
         }
         round
         playerOne{

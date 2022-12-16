@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,53 +58,42 @@ public class EventGameRecordController {
         n.setPlayerOnePoints(playerOnePoints);
         n.setPlayerTwoPoints(playerTwoPoints);
         n.setDone(true);
-        List<EventUserRecord> list = StreamSupport.stream(n.getEvent().getEventUserRecords().spliterator(), false)
-                .filter((x) -> x.getUser().getId() == n.getPlayerOne().getId()
-                        || (n.getPlayerTwo() != null && x.getUser().getId() == n.getPlayerTwo().getId()))
-                .toList();
-        if (list.size() > 1) {
-            var enemiesOfUser1 = list.get(0).getEnemies();
-            enemiesOfUser1.add(list.get(1).getUser());
-            list.get(0).setEnemies(enemiesOfUser1);
-            var enemiesOfUser2 = list.get(1).getEnemies();
-            enemiesOfUser2.add(list.get(0).getUser());
-            list.get(1).setEnemies(enemiesOfUser2);
-            if (list.get(0).getUser().getId() == n.getPlayerOne().getId()) {
-                list.get(0).setPoints(list.get(0).getPoints() + playerOnePoints);
-                list.get(1).setPoints(list.get(1).getPoints() + playerTwoPoints);
-                if (playerOnePoints > playerTwoPoints) {
-                    list.get(0).setWins(list.get(0).getWins() + 1);
-                    list.get(1).setLoses(list.get(1).getLoses() + 1);
-                }
-                if (playerOnePoints < playerTwoPoints) {
-                    list.get(1).setWins(list.get(1).getWins() + 1);
-                    list.get(0).setLoses(list.get(0).getLoses() + 1);
-                }
-                if (playerOnePoints == playerTwoPoints) {
-                    list.get(1).setWins(list.get(1).getWins() + 1);
-                    list.get(0).setWins(list.get(0).getWins() + 1);
-                }
+        EventUserRecord u1 = StreamSupport.stream(n.getPlayerOne().getEventUserRecords().spliterator(), false)
+                .filter((x) -> x.getEvent().getId() == n.getEvent().getId())
+                .findFirst().get();
+        EventUserRecord u2 = null;
+        if (n.getPlayerTwo() != null) {
+            u2 = StreamSupport.stream(n.getPlayerTwo().getEventUserRecords().spliterator(), false)
+                    .filter((x) -> x.getEvent().getId() == n.getEvent().getId())
+                    .findFirst().get();
+        }
+
+        if (u2 != null) {
+            var enemiesOfUser1 = u1.getEnemies();
+            enemiesOfUser1.add(u2.getUser());
+            u1.setEnemies(enemiesOfUser1);
+            var enemiesOfUser2 = u2.getEnemies();
+            enemiesOfUser2.add(u1.getUser());
+            u2.setEnemies(enemiesOfUser2);
+            u1.setPoints(u1.getPoints() + playerOnePoints);
+            u2.setPoints(u2.getPoints() + playerTwoPoints);
+            if (playerOnePoints > playerTwoPoints) {
+                u1.setWins(u1.getWins() + 1);
+                u2.setLoses(u2.getLoses() + 1);
+            }
+            if (playerOnePoints < playerTwoPoints) {
+                u2.setWins(u2.getWins() + 1);
+                u1.setLoses(u1.getLoses() + 1);
             } else {
-                list.get(0).setPoints(list.get(0).getPoints() + playerTwoPoints);
-                list.get(1).setPoints(list.get(1).getPoints() + playerOnePoints);
-                if (playerOnePoints > playerTwoPoints) {
-                    list.get(1).setWins(list.get(1).getWins() + 1);
-                    list.get(0).setLoses(list.get(0).getLoses() + 1);
-                }
-                if (playerOnePoints < playerTwoPoints) {
-                    list.get(0).setWins(list.get(0).getWins() + 1);
-                    list.get(1).setLoses(list.get(1).getLoses() + 1);
-                }
-                if (playerOnePoints == playerTwoPoints) {
-                    list.get(1).setWins(list.get(1).getWins() + 1);
-                    list.get(0).setWins(list.get(0).getWins() + 1);
-                }
+                u2.setWins(u2.getWins() + 1);
+                u1.setWins(u1.getWins() + 1);
             }
         } else {
-            list.get(0).setPoints(list.get(0).getPoints() + playerOnePoints);
+            u1.setPoints(u1.getPoints() + playerOnePoints);
         }
         eventGameRecordRepository.save(n);
-        eventUserRecordRepository.saveAll(list);
+        eventUserRecordRepository.save(u1);
+        eventUserRecordRepository.save(u2);
         return "Points changed";
     }
 
