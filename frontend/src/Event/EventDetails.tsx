@@ -23,7 +23,7 @@ export function EventDetails(props: EventDetailsProps){
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
-    const [deadline, setDeadline] = useState(event.data?.eventByID.roundEnd || "1/1/2000");
+    const [deadline, setDeadline] = useState("");
 
     function onClick(){
         mutation({variables:{eventID:id}, 
@@ -50,21 +50,27 @@ export function EventDetails(props: EventDetailsProps){
             setSeconds(Math.floor((time / 1000) % 60));
         }
     }
+    useEffect(()=> {
+        if(event.data !== undefined)
+            setDeadline(event.data?.eventByID.roundEnd);
+        else
+            setDeadline("1/1/2000")
+    }, [event.loading])
 
     useEffect(() => {
-        const interval = setInterval(() => getTime(), 1000);
+            const interval = setInterval(() => getTime(), 1000);
     
-        return () => clearInterval(interval);
-      }, []);
+            return () => clearInterval(interval);      
+      }, [deadline]);
 
-      if (loading || event.loading || inevent.loading) {
+    if (loading || event.loading || inevent.loading) {
         return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
-      }
+    }
 
     return(<>
-        {event.loading? <span>LOADING</span>: 
+        {
             <div>
-                {deadline !== null && <h2>{hours}:{minutes}:{seconds}</h2>}
+                {deadline !== "1/1/2000" && deadline !== null && <h2>{hours}:{minutes}:{seconds}</h2>}
                 <h3>Details</h3>
                 <div className="EventDetails">
                     <table>  
