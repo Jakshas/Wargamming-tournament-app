@@ -77,6 +77,7 @@ export const EVENT_BY_ID_QUERY = gql`
         id
       }
       state
+      description
     }
   }
 `;
@@ -167,6 +168,11 @@ export const ADD_USER_TO_EVENT_QUERY = gql`
     }
 `;
 
+export const CHANGE_DESCRIPTION = gql`
+    mutation setDescription($id: ID!,$description: String!){
+      setDescription(id: $id, description: $description)
+    }
+`;
 export const SET_BONUS_POINTS = gql`
     mutation SetBonusPoints($id: ID!, $bonusPoints: Int!){
       setBonusPoints(id: $id, bonusPoints: $bonusPoints)
@@ -257,8 +263,8 @@ mutation AddUser($name: String!, $email: String!, $password: String!){
 `;
 
 export const ADD_EVENT_MUTATION = gql`
-mutation AddEvent($name: String!, $organizer: ID!, $maxRounds: Int!, $roundTime: Int!){
-  addEvent(name: $name, organizer: $organizer, maxRounds: $maxRounds, roundTime: $roundTime)
+mutation AddEvent($name: String!, $organizer: ID!, $maxRounds: Int!, $roundTime: Int!, $descryption: String!){
+  addEvent(name: $name, organizer: $organizer, maxRounds: $maxRounds, roundTime: $roundTime, descryption: $descryption)
 }
 `;
 

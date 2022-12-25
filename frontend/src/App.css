@@ -14,6 +14,11 @@
   }
 }
 
+textarea{
+  width: 20%;
+  height: 400px;  
+}
+
 .App-header {
   min-height: 100vh;
   display: flow-root;
