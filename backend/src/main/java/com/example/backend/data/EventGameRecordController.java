@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import com.example.backend.data.repositories.EventGameRecordRepository;
 import com.example.backend.data.repositories.EventRepository;
 import com.example.backend.data.repositories.EventUserRecordRepository;
+import com.example.backend.data.repositories.QueueEntryRepository;
 import com.example.backend.data.repositories.UserRepository;
 
 @Controller
@@ -26,6 +28,9 @@ public class EventGameRecordController {
 
     @Autowired
     EventGameRecordRepository eventGameRecordRepository;
+    
+    @Autowired
+    QueueEntryRepository queueEntryRepository;
 
     @Autowired
     private EventRepository eventRepository;
@@ -142,6 +147,8 @@ public class EventGameRecordController {
         }
         if (e.getRound() == 0) {
             e.setState(Event.State.INPROGRESS);
+            List<QueueEntry> que = StreamSupport.stream(queueEntryRepository.findAll().spliterator(), false).filter((x) -> x.getEventID() == eventID).toList();
+            queueEntryRepository.deleteAll(que);
         }
         e.setRoundEnd((LocalDateTime.now().plusMinutes(e.getRoundTime())).toString());
         e.setRound(e.getRound() + 1);
