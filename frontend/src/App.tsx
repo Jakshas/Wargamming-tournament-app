@@ -74,9 +74,6 @@ function App() {
           <Link to={"/user/"+ID}>User Details</Link>
         </li>
         <li>
-          <Link to="/userlist">Users</Link>
-        </li>
-        <li>
           <Link to="/eventlist">Events</Link>
         </li>
         <li>

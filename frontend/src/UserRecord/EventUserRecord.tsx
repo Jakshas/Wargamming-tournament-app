@@ -7,6 +7,7 @@ import { IUser } from "../User/User"
 import useToken from "../useToken"
 import { Confirm } from "react-admin"
 import { confirmAlert } from "react-confirm-alert"
+import useID from "../useID"
 
 export interface IEventUserRecord {
     id: number
@@ -26,7 +27,7 @@ interface EventUserRecordProps {
 }
 
 export function EventUserRecord(props: EventUserRecordProps){
-    const {token, setToken} = useToken();
+    const {ID, setID} = useID();
     const navigate = useNavigate();
     const [setMutation] = useMutation(SET_BONUS_POINTS);
     const [deleteMuatation] = useMutation(DELETE_USER_FROM_EVENT);
@@ -49,9 +50,9 @@ export function EventUserRecord(props: EventUserRecordProps){
              <td>{record.wins}</td>
              <td>{record.loses}</td>
              <td>{record.points}</td>
-             <td><input type="number" defaultValue={bonuspoints} onChange={e => setBonusPoints(Number(e.target.value))} onBlur={onBlur}/></td>
+             <td>{record.event.organizer.id == Number(ID) ? <input type="number" defaultValue={bonuspoints} onChange={e => setBonusPoints(Number(e.target.value))} onBlur={onBlur}/>: bonuspoints}</td>
              <td><button className="ListButton" onClick={onClickList}>List</button></td>
-             {record.event.organizer.id == Number(token) && <td><button className="ListButton" onClick={() =>setOpen(true)}>Delete user</button></td>}
+             {record.event.organizer.id == Number(ID) && <td><button className="ListButton" onClick={() =>setOpen(true)}>Delete user</button></td>}
         </tr>
         <Confirm
             isOpen={open}

@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -33,6 +34,16 @@ public class Event {
     private String lastCalled;
     private int roundTime;
     private State state;
+    @Lob
+    private String description;
+
+    public String getDescryption(){
+        return description;
+    }
+
+    public void setDescription(String description){
+        this.description = description;
+    }
 
     /**
      * @return State

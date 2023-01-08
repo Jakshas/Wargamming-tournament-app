@@ -12,6 +12,7 @@ interface EventProps{
 export function AddEvent(props: EventProps) {
     const navigate = useNavigate();
     const [name, setName] = useState("");
+    const [description, setDesc] = useState("");
     const [rounds, setRounds] = useState(0);
     const [roundTime, setRoundTime] = useState(0);
     const [ mutateFunction, {loading}] = useMutation(ADD_EVENT_MUTATION);
@@ -23,7 +24,7 @@ export function AddEvent(props: EventProps) {
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
-        mutateFunction({variables:{name: name, maxRounds: rounds, organizer: props.organizer, roundTime:roundTime},
+        mutateFunction({variables:{name: name, maxRounds: rounds, organizer: props.organizer, roundTime: roundTime, descryption: description},
             onCompleted: (addEvent) => {
                 navigate('/event/' + addEvent.addEvent);
                 window.location.reload(); 
@@ -63,6 +64,10 @@ export function AddEvent(props: EventProps) {
             <label>
                 <p>Round time in minutes</p>
                 <input type="number" onChange={e => setRoundTime(Number(e.target.value))}/>
+            </label>
+            <label>
+                <p>Description</p>
+                <textarea onChange={e => setDesc(e.target.value)}/>
             </label>
             <div>
                 <button className="SubbmitButton" type="submit" disabled={validation.length != 0}>Submit</button>

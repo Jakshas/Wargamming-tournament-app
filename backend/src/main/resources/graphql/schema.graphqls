@@ -22,6 +22,7 @@ type Event {
   roundEnd: String
   lastCalled: String
   state: State!
+  description: String
   eventGameRecords: [EventGameRecord]
   eventUserRecords: [EventUserRecord]
 }
@@ -88,11 +89,13 @@ type Mutation {
   login(email: String, password: String): String
   changePassword(id: ID!, oldPassword: String!, newPassword: String!): String
   deleteUser(id: ID!): String
+  setDescription(id: ID!, description: String!): String!
   addEvent(
     name: String!
     organizer: ID!
     maxRounds: Int!
     roundTime: Int!
+    descryption: String
   ): String
   addParticipant(id: ID!, participant: ID!): String
   deleteEvent(id: ID!): String
