@@ -15,11 +15,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /**
+     * @return PasswordEncoder
+     */
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * @return AuthenticationManager
+     * @throws Exception
+     */
     @Bean
     protected AuthenticationManager getAuthenticationManager() throws Exception {
         return authenticationManager();
@@ -28,6 +35,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     protected JWTTokenUtils tokenUtils;
 
+    /**
+     * Make config for aplication
+     * 
+     * @param httpSecurity
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity

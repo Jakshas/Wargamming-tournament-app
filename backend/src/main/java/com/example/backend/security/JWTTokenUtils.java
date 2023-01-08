@@ -20,22 +20,40 @@ public class JWTTokenUtils {
     private String secret = "Graphql";
     private long expirationTime = 3600000L;
 
+    /**
+     * @return String
+     */
     public String getHeaderString() {
         return headerString;
     }
 
+    /**
+     * @return String
+     */
     public String getTokenPrefix() {
         return tokenPrefix;
     }
 
+    /**
+     * @return String
+     */
     public String getSecret() {
         return secret;
     }
 
+    /**
+     * @return long
+     */
     public long getExpirationTime() {
         return expirationTime;
     }
 
+    /**
+     * Decode token
+     * 
+     * @param authorizationHeader
+     * @return TokenPayload
+     */
     public TokenPayload decodeToken(String authorizationHeader) {
         try {
             DecodedJWT decodedToken = JWT.require(Algorithm.HMAC512(getSecret().getBytes()))

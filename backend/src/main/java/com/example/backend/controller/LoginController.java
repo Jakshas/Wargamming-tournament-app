@@ -1,4 +1,4 @@
-package com.example.backend.data;
+package com.example.backend.controller;
 
 import java.util.stream.StreamSupport;
 
@@ -9,9 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import com.example.backend.data.User;
 import com.example.backend.data.repositories.UserRepository;
 import com.example.backend.security.JWTTokenGenerator;
 
+/**
+ * Controller managing login and register
+ **/
 @Controller
 public class LoginController {
     @Autowired
@@ -23,6 +27,12 @@ public class LoginController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * @param name
+     * @param email
+     * @param password
+     * @return String
+     */
     @MutationMapping
     public String addUser(@Argument(name = "name") String name, @Argument(name = "email") String email,
             @Argument(name = "password") String password) {
@@ -35,6 +45,11 @@ public class LoginController {
         return "Added";
     }
 
+    /**
+     * @param email
+     * @param password
+     * @return String
+     */
     @MutationMapping
     public String login(@Argument(name = "email") String email, @Argument(name = "password") String password) {
 

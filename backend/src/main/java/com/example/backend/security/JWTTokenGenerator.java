@@ -12,6 +12,14 @@ public class JWTTokenGenerator {
     @Autowired
     private JWTTokenUtils tokenUtils;
 
+    /**
+     * Generate token
+     * 
+     * @param id
+     * @param role
+     * @param password
+     * @return String
+     */
     public String build(Object id, Object role, Object password) {
         return JWT.create()
                 .withSubject(id.toString())

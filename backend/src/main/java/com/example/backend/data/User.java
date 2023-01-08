@@ -13,7 +13,10 @@ import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 
-@Entity // This tells Hibernate to make a table out of this class
+/**
+ * Class describing user
+ **/
+@Entity
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,50 +40,86 @@ public class User {
   @ManyToMany
   private Set<EventUserRecord> enemies;
 
+  /**
+   * @return Set<EventUserRecord>
+   */
   public Set<EventUserRecord> getEventUserRecords() {
     return this.eventUserRecords;
   }
 
+  /**
+   * @param eventUserRecords
+   */
   public void setEventUserRecords(Set<EventUserRecord> eventUserRecords) {
     this.eventUserRecords = eventUserRecords;
   }
 
+  /**
+   * @return Integer
+   */
   public Integer getId() {
     return id;
   }
 
+  /**
+   * @param id
+   */
   public void setId(Integer id) {
     this.id = id;
   }
 
+  /**
+   * @return String
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * @param name
+   */
   public void setName(String name) {
     this.name = name;
   }
 
+  /**
+   * @return String
+   */
   public String getEmail() {
     return email;
   }
 
+  /**
+   * @param email
+   */
   public void setEmail(String email) {
     this.email = email;
   }
 
+  /**
+   * @param password
+   */
   public void setPassword(String password) {
     this.password = password;
   }
 
+  /**
+   * @return String
+   */
   public String getPassword() {
     return password;
   }
 
+  /**
+   * @param organizing
+   */
   public void setOrganizing(Set<Event> organizing) {
     this.organizing = organizing;
   }
 
+  /**
+   * @return Set<Event>
+   */
   public Set<Event> getOrganizing() {
     return organizing;
   }

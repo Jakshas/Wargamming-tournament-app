@@ -14,14 +14,23 @@ public class TokenPayload {
         this.password = password;
     }
 
+    /**
+     * @return String
+     */
     public String getID() {
         return ID;
     }
 
+    /**
+     * @return Role
+     */
     public User.Role getRole() {
         return role;
     }
 
+    /**
+     * @return String
+     */
     public String getPassword() {
         return password;
     }

@@ -1,4 +1,4 @@
-package com.example.backend.data;
+package com.example.backend.controller;
 
 import java.security.Principal;
 import java.util.stream.StreamSupport;
@@ -10,10 +10,15 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
+import com.example.backend.data.Event;
+import com.example.backend.data.EventUserRecord;
 import com.example.backend.data.repositories.EventRepository;
 import com.example.backend.data.repositories.EventUserRecordRepository;
 import com.example.backend.data.repositories.UserRepository;
 
+/**
+ * Controller for EventUserRecord
+ **/
 @Controller
 @Secured("ROLE_NORMAL")
 public class EventUserRecordController {
@@ -26,6 +31,12 @@ public class EventUserRecordController {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Get score for user
+     * 
+     * @param id Id of user
+     * @return Iterable<EventUserRecord>
+     */
     @QueryMapping
     public Iterable<EventUserRecord> getEventUserRecordForUser(@Argument(name = "id") int id) {
 
@@ -33,6 +44,12 @@ public class EventUserRecordController {
                 .filter((x) -> x.getUser().getId() == id).toList();
     }
 
+    /**
+     * Get scores for event
+     * 
+     * @param id Id of event
+     * @return Iterable<EventUserRecord>
+     */
     @QueryMapping
     public Iterable<EventUserRecord> getEventUserRecordForEvent(@Argument(name = "id") int id) {
 
@@ -42,6 +59,12 @@ public class EventUserRecordController {
                 .toList();
     }
 
+    /**
+     * Get score for event for summary of event
+     * 
+     * @param id Id of event
+     * @return Iterable<EventUserRecord>
+     */
     @QueryMapping
     public Iterable<EventUserRecord> getEventUserRecordForEventSummary(@Argument(name = "id") int id) {
 
@@ -71,6 +94,14 @@ public class EventUserRecordController {
         return places;
     }
 
+    /**
+     * Add user to event
+     * 
+     * @param principal Principal from Spring Security
+     * @param userID    Id of user
+     * @param eventID   Id of event
+     * @return String
+     */
     @MutationMapping
     public String addUserToEvent(Principal principal, @Argument(name = "userID") int userID,
             @Argument(name = "eventID") int eventID) {
@@ -89,6 +120,13 @@ public class EventUserRecordController {
         return "Added";
     }
 
+    /**
+     * Delete user form event
+     * 
+     * @param principal Principal from Spring Security
+     * @param id        Id of EventUserRecord
+     * @return String
+     */
     @MutationMapping
     public String deleteUserFromEvent(Principal principal, @Argument(name = "id") int id) {
         var e = eventUserRecordRepository.findById(id).get();
@@ -99,6 +137,14 @@ public class EventUserRecordController {
         return "Deleted";
     }
 
+    /**
+     * Set bonus points for user in event
+     * 
+     * @param principal   Principal from Spring Security
+     * @param id          Id of EventUserRecord
+     * @param bonusPoints Bonus points for user score
+     * @return String
+     */
     @MutationMapping
     public String setBonusPoints(Principal principal, @Argument(name = "id") int id,
             @Argument(name = "bonusPoints") int bonusPoints) {
@@ -111,6 +157,13 @@ public class EventUserRecordController {
         return "Deleted";
     }
 
+    /**
+     * Get list for user in event
+     * 
+     * @param eventID Id of event
+     * @param userID  Id of user
+     * @return String
+     */
     @QueryMapping
     public String getListForUserInEvent(@Argument(name = "eventID") int eventID,
             @Argument(name = "userID") int userID) {
@@ -119,6 +172,14 @@ public class EventUserRecordController {
                 .getList();
     }
 
+    /**
+     * Set list for user in event
+     * 
+     * @param eventID Id of event
+     * @param userID  Id of user
+     * @param list    List of user
+     * @return String
+     */
     @MutationMapping
     public String setListForUserInEvent(@Argument(name = "eventID") int eventID,
             @Argument(name = "userID") int userID, @Argument(name = "list") String list) {
@@ -129,6 +190,13 @@ public class EventUserRecordController {
         return "Changed";
     }
 
+    /**
+     * Get place for user in event
+     * 
+     * @param eventID Id of event
+     * @param userID  Id of user
+     * @return int
+     */
     @QueryMapping
     public int getPlaceForUserInEvent(@Argument(name = "eventID") int eventID, @Argument(name = "userID") int userID) {
         return 0;

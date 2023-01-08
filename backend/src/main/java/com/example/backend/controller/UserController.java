@@ -1,4 +1,4 @@
-package com.example.backend.data;
+package com.example.backend.controller;
 
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -10,10 +10,15 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
+import com.example.backend.data.User;
+import com.example.backend.data.UserStats;
 import com.example.backend.data.repositories.EventUserRecordRepository;
 import com.example.backend.data.repositories.QueueEntryRepository;
 import com.example.backend.data.repositories.UserRepository;
 
+/**
+ * Controller for QueueEntry
+ **/
 @Controller
 @Secured("ROLE_NORMAL")
 public class UserController {
@@ -24,6 +29,14 @@ public class UserController {
     @Autowired
     private EventUserRecordRepository eventUserRecordRepository;
 
+    /**
+     * Change password for user
+     * 
+     * @param id          Id of user
+     * @param oldPassword Old password
+     * @param newPassword New password
+     * @return String
+     */
     @MutationMapping
     public String changePassword(@Argument(name = "id") int id, @Argument(name = "oldPassword") String oldPassword,
             @Argument(name = "newPassword") String newPassword) {
@@ -42,6 +55,12 @@ public class UserController {
         return "Changed";
     }
 
+    /**
+     * Delete user
+     * 
+     * @param id Id of user
+     * @return String
+     */
     @MutationMapping
     public String deleteUser(@Argument(name = "id") int id) {
 
@@ -50,16 +69,34 @@ public class UserController {
         return "Deleted";
     }
 
+    /**
+     * Get all users
+     * 
+     * @return Iterable<User>
+     */
     @QueryMapping
     public Iterable<User> users() {
         return userRepository.findAll();
     }
 
+    /**
+     * Get user by ID
+     * 
+     * @param id Id of user
+     * @return User
+     */
     @QueryMapping
     public User userByID(@Argument(name = "id") int id) {
         return userRepository.findById(id).get();
     }
 
+    /**
+     * Get all users in event
+     * 
+     * @param userID  Id of user
+     * @param eventID Id of event
+     * @return String
+     */
     @QueryMapping
     public String userInEvent(@Argument(name = "userID") int userID, @Argument(name = "eventID") int eventID) {
         User u = userRepository.findById(userID).get();
@@ -76,6 +113,12 @@ public class UserController {
         return "Not";
     }
 
+    /**
+     * Get statistics for user
+     * 
+     * @param id Id of user
+     * @return UserStats
+     */
     @QueryMapping
     public UserStats statsForUser(@Argument(name = "id") int id) {
         var records = StreamSupport.stream(eventUserRecordRepository.findAll().spliterator(), false)

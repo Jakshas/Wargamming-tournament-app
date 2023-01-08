@@ -1,4 +1,4 @@
-package com.example.backend.data;
+package com.example.backend.controller;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -13,11 +13,17 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
+import com.example.backend.data.Event;
+import com.example.backend.data.EventGameRecord;
+import com.example.backend.data.EventUserRecord;
 import com.example.backend.data.repositories.EventGameRecordRepository;
 import com.example.backend.data.repositories.EventRepository;
 import com.example.backend.data.repositories.EventUserRecordRepository;
 import com.example.backend.data.repositories.UserRepository;
 
+/**
+ * Controller for EventGameRecord
+ **/
 @Controller
 @Secured("ROLE_NORMAL")
 public class EventGameRecordController {
@@ -33,6 +39,15 @@ public class EventGameRecordController {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Make new match
+     * 
+     * @param eventID     Id of event
+     * @param round       Numer of round
+     * @param playerOneID Id of player one
+     * @param playerTwoID Id of player two
+     * @return String
+     */
     @MutationMapping
     public String addMatch(@Argument(name = "eventID") int eventID, @Argument(name = "round") int round,
             @Argument(name = "playerOneID") int playerOneID, @Argument(name = "playerTwoID") int playerTwoID) {
@@ -47,6 +62,15 @@ public class EventGameRecordController {
         return "Added";
     }
 
+    /**
+     * Set match points
+     * 
+     * @param principal       Principal from Spring Security
+     * @param matchID         Id of match
+     * @param playerOnePoints Points of player one
+     * @param playerTwoPoints Points of player two
+     * @return String
+     */
     @MutationMapping
     public String setMatchPoints(Principal principal, @Argument(name = "matchID") int matchID,
             @Argument(name = "playerOnePoints") int playerOnePoints,
@@ -97,6 +121,12 @@ public class EventGameRecordController {
         return "Points changed";
     }
 
+    /**
+     * Get games of event
+     * 
+     * @param id Id of game
+     * @return Iterable<EventGameRecord>
+     */
     @QueryMapping
     public Iterable<EventGameRecord> getEventGameRecordForEvent(@Argument(name = "id") int id) {
 
@@ -104,6 +134,13 @@ public class EventGameRecordController {
                 .filter((x) -> x.getEvent().getId() == id).toList();
     }
 
+    /**
+     * Get games of event for round
+     * 
+     * @param id    Id of game
+     * @param round Numer of round
+     * @return Iterable<EventGameRecord>
+     */
     @QueryMapping
     public Iterable<EventGameRecord> getEventGameRecordForEventForGame(@Argument(name = "id") int id,
             @Argument(name = "round") int round) {
@@ -112,6 +149,13 @@ public class EventGameRecordController {
                 .filter((x) -> x.getEvent().getId() == id & x.getRound() == round).toList();
     }
 
+    /**
+     * Check if two players played angainst each other
+     * 
+     * @param user1 Stats of plyer one for event
+     * @param user2 Stats of plyer two for event
+     * @return boolean
+     */
     private boolean checkIfPlayed(EventUserRecord user1, EventUserRecord user2) {
         Event e = user1.getEvent();
         for (EventGameRecord iterable_element : e.getEventGameRecords()) {
@@ -127,6 +171,13 @@ public class EventGameRecordController {
         return false;
     }
 
+    /**
+     * Make parrings for next round and go to next round
+     * 
+     * @param principal Principal from Spring Security
+     * @param eventID   Id of event
+     * @return String
+     */
     @MutationMapping
     public String makeParings(Principal principal, @Argument(name = "eventID") int eventID) {
 

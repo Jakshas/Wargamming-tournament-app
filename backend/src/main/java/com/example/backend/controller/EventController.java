@@ -1,4 +1,4 @@
-package com.example.backend.data;
+package com.example.backend.controller;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -12,9 +12,14 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
+import com.example.backend.data.Event;
+import com.example.backend.data.EventUserRecord;
 import com.example.backend.data.repositories.EventRepository;
 import com.example.backend.data.repositories.UserRepository;
 
+/**
+ * Controller for Event
+ **/
 @Controller
 @Secured("ROLE_NORMAL")
 public class EventController {
@@ -23,6 +28,16 @@ public class EventController {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Adds Event to database
+     * 
+     * @param principal Principal from Spring Security
+     * @param name      Name of event
+     * @param organizer organizer of event
+     * @param maxRounds maxRounds of event
+     * @param roundTime round time of event
+     * @return String
+     */
     @MutationMapping
     public String addEvent(Principal principal, @Argument(name = "name") String name,
             @Argument(name = "organizer") int organizer,
@@ -41,6 +56,12 @@ public class EventController {
         return n.getId().toString();
     }
 
+    /**
+     * Get Event by ID
+     * 
+     * @param id ID of event
+     * @return Event
+     */
     @QueryMapping
     public Event eventByID(@Argument(name = "id") int id) {
         var e = eventRepository.findById(id).get();
@@ -48,6 +69,11 @@ public class EventController {
         return e;
     }
 
+    /**
+     * @param principal Principal from Spring Security
+     * @param id        ID of event
+     * @return Iterable<Event>
+     */
     @QueryMapping
     public Iterable<Event> eventsOfUser(Principal principal, @Argument(name = "id") int id) {
         if (Integer.valueOf(principal.getName()) != id) {
@@ -65,6 +91,10 @@ public class EventController {
         }).toList();
     }
 
+    /**
+     * @param id ID of event
+     * @return String
+     */
     @MutationMapping
     public String deleteEvent(@Argument(name = "id") int id) {
 
@@ -73,6 +103,13 @@ public class EventController {
         return "Deleted";
     }
 
+    /**
+     * Get event to next round
+     * 
+     * @param principal Principal from Spring Security
+     * @param id        ID of event
+     * @return String
+     */
     @MutationMapping
     public String nextRound(Principal principal, @Argument(name = "id") int id) {
 
@@ -84,6 +121,14 @@ public class EventController {
         return "Next";
     }
 
+    /**
+     * Add prticipant
+     * 
+     * @param principal   Principal from Spring Security
+     * @param id          ID of event
+     * @param participant ID of participant
+     * @return String
+     */
     @MutationMapping
     public String addParticipant(Principal principal, @Argument(name = "id") int id,
             @Argument(name = "participant") int participant) {
@@ -95,11 +140,23 @@ public class EventController {
         return "Added";
     }
 
+    /**
+     * Get all events
+     * 
+     * @return Iterable<Event>
+     */
     @QueryMapping
     public Iterable<Event> events() {
         return eventRepository.findAll();
     }
 
+    /**
+     * Get organized events
+     * 
+     * @param principal Principal from Spring Security
+     * @param id        ID of user
+     * @return Iterable<Event>
+     */
     @QueryMapping
     public Iterable<Event> organizedEvents(Principal principal, @Argument(name = "id") int id) {
         if (Integer.valueOf(principal.getName()) != id) {
