@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import com.example.backend.data.Event;
 import com.example.backend.data.EventGameRecord;
 import com.example.backend.data.EventUserRecord;
+import com.example.backend.data.QueueEntry;
 import com.example.backend.data.repositories.EventGameRecordRepository;
 import com.example.backend.data.repositories.EventRepository;
 import com.example.backend.data.repositories.EventUserRecordRepository;
@@ -34,7 +35,7 @@ public class EventGameRecordController {
 
     @Autowired
     EventGameRecordRepository eventGameRecordRepository;
-    
+
     @Autowired
     QueueEntryRepository queueEntryRepository;
 
@@ -121,6 +122,11 @@ public class EventGameRecordController {
             u1.setPoints(u1.getPoints() + playerOnePoints);
         }
         eventGameRecordRepository.save(n);
+
+        /**
+         * @param id
+         * @return Iterable<EventGameRecord>
+         */
         eventUserRecordRepository.save(u1);
         eventUserRecordRepository.save(u2);
         return "Points changed";
@@ -134,6 +140,12 @@ public class EventGameRecordController {
      */
     @QueryMapping
     public Iterable<EventGameRecord> getEventGameRecordForEvent(@Argument(name = "id") int id) {
+
+        /**
+         * @param eventGameRecordRepository.findAll().spliterator()
+         * @param "id"
+         * @return Iterable<EventGameRecord>
+         */
 
         return StreamSupport.stream(eventGameRecordRepository.findAll().spliterator(), false)
                 .filter((x) -> x.getEvent().getId() == id).toList();
@@ -198,7 +210,8 @@ public class EventGameRecordController {
         }
         if (e.getRound() == 0) {
             e.setState(Event.State.INPROGRESS);
-            List<QueueEntry> que = StreamSupport.stream(queueEntryRepository.findAll().spliterator(), false).filter((x) -> x.getEventID() == eventID).toList();
+            List<QueueEntry> que = StreamSupport.stream(queueEntryRepository.findAll().spliterator(), false)
+                    .filter((x) -> x.getEventID() == eventID).toList();
             queueEntryRepository.deleteAll(que);
         }
         e.setRoundEnd((LocalDateTime.now().plusMinutes(e.getRoundTime())).toString());

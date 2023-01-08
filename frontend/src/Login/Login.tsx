@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { LOGIN_MUTATION} from "../GraphQL"
 import { useMutation} from "@apollo/client";
 import {useNavigate} from 'react-router-dom';
-import useID from '../useID';
 import Spinner from "react-spinner-material";
 interface RetLog{
   id:number
@@ -27,7 +26,7 @@ export function Login( props: LoginProps){
     e.preventDefault();
     mutateFunction({variables:{email: email, password: password},
       onCompleted: ({ login }) => {
-        if (login != "Wrong") {
+        if (login !== "Wrong") {
           let obj: RetLog = JSON.parse(login);
 
           props.setID(obj.id.toString());

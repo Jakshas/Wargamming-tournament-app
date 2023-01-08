@@ -38,12 +38,6 @@ ul.Applist{
   flex-wrap: wrap;
 }
 
-.Images{
-  background-image: url('Images/image.jpg');
-  width: 100%;
-  box-shadow: "0 0 8px 8px white inset" 
-}
-
 .TitleHeader{
   white-space: nowrap;
   align-items: center;

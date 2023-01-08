@@ -1,10 +1,8 @@
 import './App.css';
 import {
-  BrowserRouter as Router,
   Route,
   Link,
   Routes,
-  useNavigate
 } from "react-router-dom";
 import { UserList } from "./User/UserList"
 import { UserDetails } from "./User/UserDetails"
@@ -15,16 +13,14 @@ import { EventsForUser } from "./Event/EventsForUser"
 import { EventSumarry } from "./Event/EventSumarry"
 import { AddEvent } from "./Event/AddEvent"
 import { EventDetails } from "./Event/EventDetails"
-import { EventUserRecordFromUser } from "./UserRecord/EventUserRecordFromUser"
-import { EventUserRecordFromEvent } from "./UserRecord/EventUserRecordFromEvent"
 import { EventGameRecordFromEvent } from "./GameRecord/EventGameRecordFromEvent"
-import useToken from './useToken';
+import useToken from './Hooks/useToken';
 import { USER_BY_ID_QUERY } from './GraphQL';
 import { useQuery } from '@apollo/client';
 import { EventOrgaznizingList } from "./Event/EventOrganizingList";
 import { List } from "./UserRecord/List";
-import useID from './useID';
-import image from './Images/image.jpg';
+import useID from './Hooks/useID';
+import home from './Images/home.jpg';
 import Spinner from 'react-spinner-material';
 
 function App() {
@@ -36,7 +32,7 @@ function App() {
     return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
   }
 
-  if (error?.message == "Forbidden") {
+  if (error?.message === "Forbidden") {
     sessionStorage.removeItem('auth-token');
     sessionStorage.removeItem('ID');
     window.location.reload(); 
@@ -84,7 +80,7 @@ function App() {
       </ul>
         <div>
           <Routes>
-            <Route path="*" element={<div><img src={image} alt="Image" className='Images' /></div>} />
+            <Route path="*" element={<div><img src={home} alt="Battle" className='Images' /></div>} />
             <Route path="/userlist" element={<UserList/>} />
             <Route path="/eventlist" element={<EventList user={Number(ID)} />} />
             <Route path="/myevents" element={<EventsForUser user={Number(ID)} />} />

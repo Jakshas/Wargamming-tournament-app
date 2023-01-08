@@ -41,7 +41,8 @@ public class EventController {
     @MutationMapping
     public String addEvent(Principal principal, @Argument(name = "name") String name,
             @Argument(name = "organizer") int organizer,
-            @Argument(name = "maxRounds") int maxRounds, @Argument(name = "roundTime") int roundTime , @Argument(name = "description") String description) {
+            @Argument(name = "maxRounds") int maxRounds, @Argument(name = "roundTime") int roundTime,
+            @Argument(name = "description") String description) {
         if (Integer.valueOf(principal.getName()) != organizer) {
             return "User not autorised";
         }
@@ -56,8 +57,14 @@ public class EventController {
         eventRepository.save(n);
         return n.getId().toString();
     }
+
+    /**
+     * @param id
+     * @param description
+     * @return String
+     */
     @MutationMapping
-    public String setDescription(@Argument(name = "id") int id, @Argument(name = "description") String description){
+    public String setDescription(@Argument(name = "id") int id, @Argument(name = "description") String description) {
         var n = eventRepository.findById(id).get();
         n.setDescription(description);
         eventRepository.save(n);

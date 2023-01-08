@@ -37,11 +37,17 @@ public class Event {
     @Lob
     private String description;
 
-    public String getDescryption(){
+    /**
+     * @return String
+     */
+    public String getDescryption() {
         return description;
     }
 
-    public void setDescription(String description){
+    /**
+     * @param description
+     */
+    public void setDescription(String description) {
         this.description = description;
     }
 

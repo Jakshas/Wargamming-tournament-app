@@ -1,17 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { STATS_FOR_USER } from "../GraphQL";
-import useID from "../useID";
+import useID from "../Hooks/useID";
 import { EventUserRecordFromUser } from "../UserRecord/EventUserRecordFromUser";
 
-interface UserStats{
-    wins:number
-    loses:number
-    averagePoints:number
-}
-
 export function UserDetails(){
-    const {ID, setID} = useID();
-    const {data, loading, error} = useQuery(STATS_FOR_USER, {variables:{ id: ID }});
+    const {ID} = useID();
+    const {data} = useQuery(STATS_FOR_USER, {variables:{ id: ID }});
 
 
     return(<>
