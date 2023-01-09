@@ -46,6 +46,10 @@ ul.Applist{
   flex-wrap: wrap;
 }
 
+.Images{
+  width: 100%;
+}
+
 .Navdiv{
   box-sizing: border-box;
   text-align: center;

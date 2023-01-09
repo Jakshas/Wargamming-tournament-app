@@ -50,7 +50,7 @@ function App() {
   return (
     <div className='App'>
       <div className='TitleHeader'>
-        <h1>Wargamming Tournament App</h1>
+        <h1>Wargaming Tournament App</h1>
         
         <div className='Login'>
         User: { data?.userByID.name }
