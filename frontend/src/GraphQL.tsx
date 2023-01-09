@@ -18,6 +18,7 @@ export const ORGANIZED_EVENTS = gql`
       organizer{
         id
       }
+      state
     }
   }
 
@@ -45,6 +46,7 @@ export const EVENTS_OF_USER = gql`
         id
         name
       }
+      state
     }
   }
 `;
