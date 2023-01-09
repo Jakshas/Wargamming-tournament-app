@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { GET_LIST_FOR_USER_IN_EVENT, SET_LIST_FOR_USER_IN_EVENT } from "../GraphQL";
+import { GET_LIST_FOR_USER_IN_EVENT, SET_LIST_FOR_USER_IN_EVENT, USER_BY_ID_QUERY } from "../GraphQL";
 import Spinner from 'react-spinner-material';
 
 interface IListProps{
@@ -10,8 +10,8 @@ interface IListProps{
 
 export function List(params:IListProps){
     const {eventID, userID} = useParams();
-    const reff = useRef()
     const {data, loading} = useQuery(GET_LIST_FOR_USER_IN_EVENT, {variables:{eventID: eventID, userID: userID}});
+    const user = useQuery(USER_BY_ID_QUERY, {variables:{ userid: userID }});
     const [list, setList] = useState(data?.getListForUserInEvent);
     const [mutatefunction] = useMutation(SET_LIST_FOR_USER_IN_EVENT);
     
@@ -24,10 +24,11 @@ export function List(params:IListProps){
       }
     if (params.token == Number(userID)) {
         return(<>
+            <h3>List of {user.data?.userByID.name}</h3>
             <textarea defaultValue={data?.getListForUserInEvent} onChange={e => setList(e.target.value)}></textarea><br/>
             <button onClick={onClick}>Change</button>
         </>)
     }
 
-    return(<div style={{whiteSpace: "pre-wrap", textAlign:"left"} }>{data?.getListForUserInEvent}</div>)
+    return(<><h3>List of {user.data?.userByID.name}</h3> <div style={{whiteSpace: "pre-wrap", textAlign:"left"} }>{data?.getListForUserInEvent}</div></>)
 }
