@@ -16,10 +16,10 @@ export function EventList(props: EventListProps){
     const usersevents = useQuery(EVENTS_OF_USER,{variables:{userid: props.user}});
     const [radio, setRadio] = useState("ALL");
     let events = allevents.data?.events;
-    if (radio == "ORG") {
+    if (radio === "ORG") {
       events =  organizedevents.data?.organizedEvents;
     }else{
-      if (radio == "MY") {
+      if (radio === "MY") {
         events =  usersevents.data?.eventsOfUser;
       }
     }
@@ -34,9 +34,9 @@ export function EventList(props: EventListProps){
         <div>
         <label >Search <input value={inputValue} onChange={(e) => setInputValue(e.target.value)}></input></label>
         <div>
-          <input type="radio" value={"ALL"} name="search" checked={radio == "ALL"}  onChange={(event) => setRadio(event.target.value)}/> <label>All Events</label> 
-          <input type="radio"  value={"ORG"} name="search" checked={radio == "ORG"} onChange={(event) => setRadio(event.target.value)}/> <label>Organized by You</label>  
-          <input type="radio"  value={"MY"} name="search"  checked={radio == "MY"} onChange={(event) => setRadio(event.target.value)}/> <label>My Events</label> 
+          <input type="radio" value={"ALL"} name="search" checked={radio === "ALL"}  onChange={(event) => setRadio(event.target.value)}/> <label>All Events</label> 
+          <input type="radio"  value={"ORG"} name="search" checked={radio === "ORG"} onChange={(event) => setRadio(event.target.value)}/> <label>Organized by You</label>  
+          <input type="radio"  value={"MY"} name="search"  checked={radio === "MY"} onChange={(event) => setRadio(event.target.value)}/> <label>My Events</label> 
         </div>
         </div>
           <table>  
