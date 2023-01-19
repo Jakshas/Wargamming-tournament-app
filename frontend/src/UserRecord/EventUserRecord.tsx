@@ -17,50 +17,50 @@ export interface IEventUserRecord {
     loses: number
     list: String
     bonusPoints: number
-  }
+}
 
 interface EventUserRecordProps {
     record: IEventUserRecord;
     index: number
 }
 
-export function EventUserRecord(props: EventUserRecordProps){
-    const {ID} = useID();
+export function EventUserRecord(props: EventUserRecordProps) {
+    const { ID } = useID();
     const navigate = useNavigate();
     const [setMutation] = useMutation(SET_BONUS_POINTS);
     const [deleteMuatation] = useMutation(DELETE_USER_FROM_EVENT);
-    const { record, index} = props;
+    const { record, index } = props;
     const [bonuspoints, setBonusPoints] = useState(record.bonusPoints);
     const [open, setOpen] = useState(false);
 
-    function onClickList(){
-        navigate("/event/"+ props.record.event.id +"/user/"+ record.user.id);
+    function onClickList() {
+        navigate("/event/" + props.record.event.id + "/user/" + record.user.id);
     }
-    
-    function onBlur(){
-        setMutation({variables:{id: record.id, bonusPoints: bonuspoints}})
+
+    function onBlur() {
+        setMutation({ variables: { id: record.id, bonusPoints: bonuspoints } })
     }
-    return(
+    return (
         <>
-        <tr>
-             <td>{index}</td>
-             <td>{record.user.name}</td>
-             <td>{record.wins}</td>
-             <td>{record.loses}</td>
-             <td>{record.points}</td>
-             <td>{record.event.organizer.id === Number(ID) ? <input type="number" defaultValue={bonuspoints} onChange={e => setBonusPoints(Number(e.target.value))} onBlur={onBlur}/>: bonuspoints}</td>
-             <td><button className="ListButton" onClick={onClickList}>List</button></td>
-             {record.event.organizer.id === Number(ID) && <td><button className="ListButton" onClick={() =>setOpen(true)}>Delete user</button></td>}
-        </tr>
-        <Confirm
-            isOpen={open}
-            title="confirm deletion"
-            content={"Do you want to delete user?"}
-            onConfirm={() => {deleteMuatation({variables:{id:record.id}, refetchQueries:[{query: GET_EVENT_USER_RECORD_FROM_EVENT_QUERY, variables:{eventid: record.event.id }}],onCompleted:() => setOpen(false)});window.location.reload(); }}
-            onClose={() => setOpen(false)}
-            confirm="Yes"
-            cancel="No"
-        />
+            <tr>
+                <td>{index}</td>
+                <td>{record.user.name}</td>
+                <td>{record.wins}</td>
+                <td>{record.loses}</td>
+                <td>{record.points}</td>
+                <td>{Number(record.event.organizer.id) === Number(ID) ? <input type="number" data-testid="point-input" defaultValue={bonuspoints} onChange={e => setBonusPoints(Number(e.target.value))} onBlur={onBlur} /> : bonuspoints}</td>
+                <td><button className="ListButton" onClick={onClickList}>List</button></td>
+                {Number(record.event.organizer.id) === Number(ID) && <td ><button className="ListButton" onClick={() => setOpen(true)}>Delete user</button></td>}
+            </tr>
+            <Confirm
+                isOpen={open}
+                title="confirm deletion"
+                content={"Do you want to delete user?"}
+                onConfirm={() => { deleteMuatation({ variables: { id: record.id }, refetchQueries: [{ query: GET_EVENT_USER_RECORD_FROM_EVENT_QUERY, variables: { eventid: record.event.id } }], onCompleted: () => setOpen(false) }); window.location.reload(); }}
+                onClose={() => setOpen(false)}
+                confirm="Yes"
+                cancel="No"
+            />
         </>
     )
 }

@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { GET_EVENT_GAME_RECORD_FROM_EVENT_FOR_GAME_QUERY, GET_EVENT_GAME_RECORD_FROM_EVENT_QUERY } from "../GraphQL";
+import { GET_EVENT_GAME_RECORD_FROM_EVENT_FOR_GAME_QUERY } from "../GraphQL";
 import React from "react";
 import { IEventGameRecord, EventGameRecord } from "./EventGameRecord";
 import { Link, useParams } from "react-router-dom";
@@ -7,7 +7,7 @@ import Spinner from 'react-spinner-material';
 
 export function EventGameRecordFromEvent(){
     const { id, gamenumber } = useParams()
-    const { data, error, loading } = useQuery(GET_EVENT_GAME_RECORD_FROM_EVENT_FOR_GAME_QUERY, {
+    const { data, loading } = useQuery(GET_EVENT_GAME_RECORD_FROM_EVENT_FOR_GAME_QUERY, {
         variables: {eventid: id, round: gamenumber },fetchPolicy:"no-cache"
     });
     if (loading) {

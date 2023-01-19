@@ -95,7 +95,7 @@ type Mutation {
     organizer: ID!
     maxRounds: Int!
     roundTime: Int!
-    descryption: String
+    description: String
   ): String
   addParticipant(id: ID!, participant: ID!): String
   deleteEvent(id: ID!): String

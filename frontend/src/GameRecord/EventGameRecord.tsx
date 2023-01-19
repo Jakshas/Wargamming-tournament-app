@@ -32,15 +32,15 @@ export function EventGameRecord(props: EventGameRecordProps){
         mutation({variables:{matchID: record.id, playerOnePoints: playerOnePoints, playerTwoPoints: playerTwoPoints}});
         setEnable(false);
     }
-
+    console.log(typeof ID,typeof record.playerOne.id)
     return(
         <tr className={(!record.done && enable) ? "none" : "Settled"}>
             <td>{props.index}</td>
-            <td style={  Number(ID) === record.playerOne.id ? { backgroundColor:"yellow"}: {}}><Link to={"/event/"+ props.record.event.id +"/user/"+ record.playerOne.id} style={{color:"purple"}}>{record.playerOne.name}</Link></td>
-            <td>{ record.event.organizer.id === Number(ID) ? <input type="number" defaultValue={playerOnePoints} onChange={e => setplayerOnePoints(Number(e.target.value))}></input>: playerOnePoints}</td>
-            <td style={ record.playerTwo != null &&  Number(ID) === record.playerTwo.id ? { backgroundColor:"rgb(253, 255, 105)" }: {}}>{record.playerTwo != null ? <Link to={"/event/"+ props.record.event.id +"/user/"+ record.playerTwo.id} style={{color:"purple"}}>{record.playerTwo.name}</Link>: "BYE" }</td>
-            <td>{ record.event.organizer.id === Number(ID) ? <input type="number" disabled={!record.playerTwo} defaultValue={playerTwoPoints} onChange={e => setplayerTwoPoints(Number(e.target.value))}></input>: playerTwoPoints}</td>
-            {(!record.done && enable && record.event.organizer.id === Number(ID)) && <td><button className="SettleScore" onClick={onClick}>Settle score</button></td>}
+            <td style={ Number(ID) === Number(record.playerOne.id) ? { backgroundColor:"yellow"}: {}}><Link to={"/event/"+ props.record.event.id +"/user/"+ record.playerOne.id} style={(!record.done && enable) ? {color:"lightgreen"} : {color:"green"}}>{record.playerOne.name}</Link></td>
+            <td>{ !record.done && Number(record.event.organizer.id) === Number(ID) ? <input type="number" defaultValue={playerOnePoints} onChange={e => setplayerOnePoints(Number(e.target.value))}></input>: playerOnePoints}</td>
+            <td style={ record.playerTwo != null &&  Number(ID) === Number(record.playerTwo.id) ? { backgroundColor:"yellow" }: {}}>{record.playerTwo != null ? <Link to={"/event/"+ props.record.event.id +"/user/"+ record.playerTwo.id} style={(!record.done && enable) ? {color:"lightgreen"} : {color:"green"}}>{record.playerTwo.name}</Link>: "BYE" }</td>
+            <td>{ !record.done && Number(record.event.organizer.id) === Number(ID) ? <input type="number" disabled={!record.playerTwo} defaultValue={playerTwoPoints} onChange={e => setplayerTwoPoints(Number(e.target.value))}></input>: playerTwoPoints}</td>
+            {(!record.done && enable && Number(record.event.organizer.id) === Number(ID)) && <td><button className="SettleScore" onClick={onClick}>Settle score</button></td>}
         </tr>
     )
 }

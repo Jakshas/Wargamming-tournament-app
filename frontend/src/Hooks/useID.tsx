@@ -6,7 +6,7 @@ export default function useID() {
     if (typeof IDString === 'string') {
       return IDString
     }else{
-      return null;
+      return "";
     }
   };
   const [ID, setID] = useState(getID());

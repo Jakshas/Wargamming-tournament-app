@@ -24,9 +24,9 @@ import home from './Images/home.jpg';
 import Spinner from 'react-spinner-material';
 
 function App() {
-  const {token, setToken} = useToken();
-  const {ID, setID} = useID();
-  const {data, loading, error} = useQuery(USER_BY_ID_QUERY, {variables:{ userid: ID }});
+  const { token, setToken } = useToken();
+  const { ID, setID } = useID();
+  const { data, loading, error } = useQuery(USER_BY_ID_QUERY, { variables: { userid: ID } });
 
   if (loading) {
     return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />
@@ -35,14 +35,14 @@ function App() {
   if (error?.message === "Forbidden") {
     sessionStorage.removeItem('auth-token');
     sessionStorage.removeItem('ID');
-    window.location.reload(); 
+    window.location.reload();
   }
 
-  if(!token) {
-    return(      
+  if (!token) {
+    return (
       <Routes>
         <Route path="*" element={<Login setToken={setToken} setID={setID} />} />
-        <Route path="/register" element={<Register/>} />
+        <Route path="/register" element={<Register />} />
       </Routes>)
 
   }
@@ -51,23 +51,23 @@ function App() {
     <div className='App'>
       <div className='TitleHeader'>
         <h1>Wargaming Tournament App</h1>
-        
+
         <div className='Login'>
-        User: { data?.userByID.name }
-        <button className='TitleHeader' onClick={() => {
-          sessionStorage.removeItem('auth-token');
-          sessionStorage.removeItem('ID');
-          window.location.reload(); 
-        }}>Logout</button>
+          User: {data?.userByID.name}
+          <button className='TitleHeader' onClick={() => {
+            sessionStorage.removeItem('auth-token');
+            sessionStorage.removeItem('ID');
+            window.location.reload();
+          }}>Logout</button>
         </div>
 
       </div>
       <ul className='Applist'>
-      <li>
+        <li>
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to={"/user/"+ID}>User Details</Link>
+          <Link to={"/user/" + ID}>User Details</Link>
         </li>
         <li>
           <Link to="/eventlist">Events</Link>
@@ -78,21 +78,21 @@ function App() {
 
 
       </ul>
-        <div>
-          <Routes>
-            <Route path="*" element={<div><img src={home} alt="Battle" className='Images' /></div>} />
-            <Route path="/userlist" element={<UserList/>} />
-            <Route path="/eventlist" element={<EventList user={Number(ID)} />} />
-            <Route path="/myevents" element={<EventsForUser user={Number(ID)} />} />
-            <Route path="/eventlist/organizing" element={<EventOrgaznizingList user={Number(ID)} />} />
-            <Route path="/user/:id" element={<UserDetails/>} />
-            <Route path="/event/:id" element={<EventDetails token={Number(ID)}/>} />
-            <Route path="/event/:id/summary" element={<EventSumarry/>} />
-            <Route path="/event/add" element={<AddEvent organizer={ID ? ID : ""} />} />
-            <Route path="/event/:eventID/user/:userID" element={<List token={Number(ID)} />}/>
-            <Route path="/event/:id/game/:gamenumber" element={<EventGameRecordFromEvent/>} />
-          </Routes>
-        </div>
+      <div>
+        <Routes>
+          <Route path="*" element={<div><img src={home} alt="Battle" className='Images' /></div>} />
+          <Route path="/userlist" element={<UserList />} />
+          <Route path="/eventlist" element={<EventList user={Number(ID)} />} />
+          <Route path="/myevents" element={<EventsForUser user={Number(ID)} />} />
+          <Route path="/eventlist/organizing" element={<EventOrgaznizingList user={Number(ID)} />} />
+          <Route path="/user/:id" element={<UserDetails />} />
+          <Route path="/event/:id" element={<EventDetails token={Number(ID)} />} />
+          <Route path="/event/:id/summary" element={<EventSumarry />} />
+          <Route path="/event/add" element={<AddEvent organizer={Number(ID)} />} />
+          <Route path="/event/:eventID/user/:userID" element={<List token={Number(ID)} />} />
+          <Route path="/event/:id/game/:gamenumber" element={<EventGameRecordFromEvent />} />
+        </Routes>
+      </div>
     </div>
   );
 }

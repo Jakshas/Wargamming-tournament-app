@@ -10,7 +10,7 @@ interface EventListProps {
 
 
 export function EventOrgaznizingList(props: EventListProps){
-    const { data, error, loading } = useQuery(ORGANIZED_EVENTS, {variables:{userid: props.user}});
+    const { data, loading } = useQuery(ORGANIZED_EVENTS, {variables:{userid: props.user}});
 
     if (loading) {
       return <Spinner radius={120} color={"rgb(218, 218, 218)"} stroke={2} visible={true} />

@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { EVENTS_OF_USER, EVENT_QUERY } from "../GraphQL";
+import { EVENTS_OF_USER } from "../GraphQL";
 import React, { useState } from "react";
 import { IEvent, Event } from "./Event";
 import Spinner from 'react-spinner-material';
@@ -10,7 +10,7 @@ interface EventListProps {
 
 export function EventsForUser(props: EventListProps){
     const [inputValue, setInputValue] = useState("");
-    const { data, error, loading } = useQuery(EVENTS_OF_USER,{variables:{userid: props.user}});
+    const { data, loading } = useQuery(EVENTS_OF_USER,{variables:{userid: props.user}});
 
     let events = data ? data.eventsOfUser: [];
     events = events.filter((event:IEvent) => event.name.includes(inputValue));

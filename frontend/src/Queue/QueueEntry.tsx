@@ -21,9 +21,9 @@ export interface QueueEntryProps{
 export function QueueEntry(props: QueueEntryProps) {
     const userByID = useQuery(USER_BY_ID_QUERY, {variables:{userid: props.queue.userID}});
     const [mutatefunctionDelete] = useMutation(DELETE_FROM_QUEUE);
-    const [mutatefunctionAdd,{loading}] = useMutation(ADD_USER_TO_EVENT_QUERY);
+    const [mutatefunctionAdd] = useMutation(ADD_USER_TO_EVENT_QUERY);
     const [enabled, setEnabled] = useState(false);
-    const {queue, organizerID,lookinguserID} = props;
+    const { organizerID,lookinguserID} = props;
 
     function onClick(){
         mutatefunctionDelete({variables:{ id: props.queue.id }});
@@ -38,7 +38,7 @@ export function QueueEntry(props: QueueEntryProps) {
             {userByID.loading ? <></> : 
             <> 
                 <td>{userByID.data.userByID.name}</td>
-            {lookinguserID == organizerID && <td><button disabled = {enabled} onClick={onClick}>Accept</button></td>}
+            {Number(lookinguserID) === Number(organizerID) && <td><button disabled = {enabled} onClick={onClick}>Accept</button></td>}
          </>}
 
     </tr>

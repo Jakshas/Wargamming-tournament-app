@@ -265,8 +265,8 @@ mutation AddUser($name: String!, $email: String!, $password: String!){
 `;
 
 export const ADD_EVENT_MUTATION = gql`
-mutation AddEvent($name: String!, $organizer: ID!, $maxRounds: Int!, $roundTime: Int!, $descryption: String!){
-  addEvent(name: $name, organizer: $organizer, maxRounds: $maxRounds, roundTime: $roundTime, descryption: $descryption)
+mutation AddEvent($name: String!, $organizer: ID!, $maxRounds: Int!, $roundTime: Int!, $description: String!){
+  addEvent(name: $name, organizer: $organizer, maxRounds: $maxRounds, roundTime: $roundTime, description: $description)
 }
 `;
 
